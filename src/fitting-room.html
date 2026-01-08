@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Fitting Room</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, #1e2433 0%, #0c0e16 55%, #07080f 100%);
+      color: #e6e9f2;
+      overflow: hidden;
+    }
+    #app {
+      position: fixed;
+      inset: 0;
+    }
+    #canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    #hud {
+      position: absolute;
+      left: 50%;
+      bottom: 32px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+      padding: 12px 16px;
+      background: rgba(9, 11, 18, 0.72);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+    }
+    .carousel {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      min-width: 210px;
+    }
+    .carousel .label {
+      grid-column: 1 / 4;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: #9fb3ff;
+      font-weight: 600;
+    }
+    .carousel button {
+      background: linear-gradient(135deg, #3f5efb 0%, #6a85ff 100%);
+      border: none;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .carousel button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(82, 114, 255, 0.35);
+    }
+    .carousel .value {
+      justify-self: center;
+      color: #e6e9f2;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    #toast {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 14px;
+      background: rgba(9, 11, 18, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e6e9f2;
+      border-radius: 10px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <canvas id="canvas"></canvas>
+    <div id="hud">
+      <div class="carousel" data-type="shirts">
+        <div class="label">Shirts</div>
+        <button data-type="shirts" data-dir="-1">Prev</button>
+        <div class="value" id="shirts-value">1</div>
+        <button data-type="shirts" data-dir="1">Next</button>
+      </div>
+      <div class="carousel" data-type="pants">
+        <div class="label">Pants</div>
+        <button data-type="pants" data-dir="-1">Prev</button>
+        <div class="value" id="pants-value">1</div>
+        <button data-type="pants" data-dir="1">Next</button>
+      </div>
+      <div class="carousel" data-type="shoes">
+        <div class="label">Shoes</div>
+        <button data-type="shoes" data-dir="-1">Prev</button>
+        <div class="value" id="shoes-value">1</div>
+        <button data-type="shoes" data-dir="1">Next</button>
+      </div>
+    </div>
+    <div id="toast"></div>
+  </div>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
+    </script>
+  <script type="module">
+    import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+    import { OrbitControls } from "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+    import { GLTFLoader } from "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
+    import { RoomEnvironment } from "https://unpkg.com/three@0.160.0/examples/jsm/environments/RoomEnvironment.js";
+
+    const assets = {
+      shirts: [
+        "../objects/shirts/object_0-10.glb",
+        "../objects/shirts/object_0-11.glb",
+        "../objects/shirts/object_0-12.glb",
+        "../objects/shirts/object_0-13.glb",
+      ],
+      pants: [
+        "../objects/pants/pant1.glb",
+        "../objects/pants/pant2.glb",
+        "../objects/pants/pant3.glb",
+        "../objects/pants/pant4.glb",
+      ],
+      shoes: [
+        "../objects/shoes/object_0-13.glb",
+        "../objects/shoes/object_0-15.glb",
+      ],
+    };
+
+    const verticalOffsets = {
+      shoes: 1.2,      // raised up more
+      pants: 2.4,      // noticeably above shoes
+      shirts: 4.5,     // noticeably above pants
+    };
+
+    const zOffsets = {
+      shoes: 0.1,      // raised up more
+      pants: 0,      // noticeably above shoes
+      shirts: 0,     // noticeably above pants
+    };
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x090b12, 12, 30);
+
+    const canvas = document.getElementById("canvas");
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    const camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 7.5, 14);
+    scene.add(camera);
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.02).texture;
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 3.4, 0);
+    controls.enableDamping = true;
+    controls.minDistance = 4;
+    controls.maxDistance = 14;
+    controls.maxPolarAngle = Math.PI * 0.55;
+
+    const hemiLight = new THREE.HemisphereLight(0x8fb2ff, 0x0b0d14, 0.75);
+    hemiLight.position.set(0, 6, 0);
+    scene.add(hemiLight);
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.35);
+    keyLight.position.set(6, 8, 8);
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.set(2048, 2048);
+    keyLight.shadow.bias = -0.0005;
+    scene.add(keyLight);
+
+    const rimLight = new THREE.DirectionalLight(0x96b3ff, 0.5);
+    rimLight.position.set(-5, 4, -4);
+    scene.add(rimLight);
+
+    const loader = new GLTFLoader();
+    const current = { shirts: 0, pants: 0, shoes: 0 };
+    const groups = { shirts: new THREE.Group(), pants: new THREE.Group(), shoes: new THREE.Group() };
+    scene.add(groups.shirts, groups.pants, groups.shoes);
+
+    const toastEl = document.getElementById("toast");
+    const values = {
+      shirts: document.getElementById("shirts-value"),
+      pants: document.getElementById("pants-value"),
+      shoes: document.getElementById("shoes-value"),
+    };
+
+    function showToast(message) {
+      toastEl.textContent = message;
+      toastEl.style.opacity = 1;
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => { toastEl.style.opacity = 0; }, 1800);
+    }
+
+    function separateShoes(object) {
+      // Collect all mesh objects that could be shoes
+      const meshes = [];
+      object.traverse((child) => {
+        if (child.isMesh) {
+          meshes.push(child);
+        }
+      });
+
+      // If we have 2 or more meshes, try to separate them
+      if (meshes.length >= 2) {
+        // Calculate bounding boxes for each mesh
+        const boxes = meshes.map((mesh) => {
+          const box = new THREE.Box3().setFromObject(mesh);
+          return { mesh, box, center: box.getCenter(new THREE.Vector3()) };
+        });
+
+        // Sort by x position (left to right)
+        boxes.sort((a, b) => a.center.x - b.center.x);
+
+        // Calculate the overall width
+        const overallBox = new THREE.Box3().setFromObject(object);
+        const overallWidth = overallBox.max.x - overallBox.min.x;
+
+        // Separate the shoes horizontally
+        const separation = Math.max(0.8, overallWidth * 0.4); // at least 0.8 units apart
+        const leftShoe = boxes[0];
+        const rightShoe = boxes[boxes.length - 1];
+
+        // Move left shoe left, right shoe right
+        if (leftShoe.mesh.parent) {
+          leftShoe.mesh.position.x -= separation / 2;
+        }
+        if (rightShoe.mesh.parent && rightShoe.mesh !== leftShoe.mesh) {
+          rightShoe.mesh.position.x += separation / 2;
+        }
+      }
+    }
+
+    function centerAndPlace(object, type) {
+      const box = new THREE.Box3().setFromObject(object);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+
+      object.position.sub(center); // center model at origin
+
+      // If it's shoes, separate the two shoes before final positioning
+      if (type === "shoes") {
+        separateShoes(object);
+        // Recalculate box after separation
+        box.setFromObject(object);
+        center.copy(box.getCenter(new THREE.Vector3()));
+        object.position.sub(center);
+      }
+
+      const yOffset = verticalOffsets[type] - box.min.y + 0.25; // keep a small gap from the "ground"
+      object.position.y += yOffset;
+      object.position.z += zOffsets[type]; // slight forward offset for better view
+
+      // scale overall, but make shoes significantly smaller
+      const scaleTarget = type === "shoes" ? 0.5: type === "pants" ? 1.2 : 1.0;
+      const maxDimension = Math.max(size.x, size.y, size.z);
+      if (maxDimension > 0) {
+        const s = (scaleTarget * 2.0) / maxDimension;
+        object.scale.setScalar(s);
+      }
+    }
+
+    function loadModel(type, index) {
+      const url = assets[type][index];
+      showToast(`Loading ${type.slice(0, 1).toUpperCase() + type.slice(1)} ${index + 1}`);
+
+      loader.load(
+        url,
+        (gltf) => {
+          groups[type].clear();
+          gltf.scene.traverse((child) => { child.castShadow = true; });
+          centerAndPlace(gltf.scene, type);
+          groups[type].add(gltf.scene);
+        },
+        undefined,
+        (err) => {
+          console.error(`Failed to load ${url}`, err);
+          showToast("Failed to load asset. Check console.");
+        }
+      );
+    }
+
+    function switchItem(type, dir) {
+      const total = assets[type].length;
+      current[type] = (current[type] + dir + total) % total;
+      values[type].textContent = current[type] + 1;
+      loadModel(type, current[type]);
+    }
+
+    document.querySelectorAll(".carousel button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const type = btn.dataset.type;
+        const dir = Number(btn.dataset.dir);
+        switchItem(type, dir);
+      });
+    });
+
+    function onResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+    window.addEventListener("resize", onResize);
+
+    // initial load
+    ["shirts", "pants", "shoes"].forEach((type) => loadModel(type, 0));
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>
+
