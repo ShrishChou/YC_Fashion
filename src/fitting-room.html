@@ -35,6 +35,72 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 14px;
       box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    #hud.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #welcome-overlay {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      background: rgba(9, 11, 18, 0.95);
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      box-sizing: border-box;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 100;
+    }
+    #welcome-overlay.slide-out {
+      transform: translateX(-100%);
+    }
+    #welcome-content {
+      text-align: center;
+      max-width: 400px;
+    }
+    #welcome-content h1 {
+      font-size: 48px;
+      font-weight: 700;
+      margin: 0 0 20px 0;
+      background: linear-gradient(135deg, #9fb3ff 0%, #6a85ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    #welcome-content p {
+      font-size: 18px;
+      color: rgba(230, 233, 242, 0.8);
+      margin: 0 0 40px 0;
+      line-height: 1.6;
+    }
+    #go-button {
+      background: linear-gradient(135deg, #3f5efb 0%, #6a85ff 100%);
+      border: none;
+      color: #fff;
+      padding: 16px 48px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 10px 30px rgba(82, 114, 255, 0.4);
+    }
+    #go-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(82, 114, 255, 0.5);
+    }
+    #go-button:active {
+      transform: translateY(0);
     }
     .carousel {
       display: grid;
@@ -98,6 +164,13 @@
 <body>
   <div id="app">
     <canvas id="canvas"></canvas>
+    <div id="welcome-overlay">
+      <div id="welcome-content">
+        <h1>Welcome</h1>
+        <p>Experience our 3D fitting room. Explore different styles and see how they look together.</p>
+        <button id="go-button">Go</button>
+      </div>
+    </div>
     <div id="hud">
       <div class="carousel" data-type="shirts">
         <div class="label">Shirts</div>
@@ -189,6 +262,12 @@
       shirts: 0,     // noticeably above pants
     };
 
+    // Position constants
+    const rightCenterX = 2.5; // initial position (on the right side of screen)
+    const targetCenterX = 0; // final center position
+    const rightCenterY = -0.5; // initial Y position (lower when on the right)
+    const targetCenterY = 0; // final Y position (normal center height)
+
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0x090b12, 12, 30);
 
@@ -210,6 +289,7 @@
     scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.02).texture;
 
     const controls = new OrbitControls(camera, renderer.domElement);
+    // Keep camera looking at center initially, items will be on the right
     controls.target.set(0, 3.4, 0);
     controls.enableDamping = true;
     controls.minDistance = 4;
@@ -234,7 +314,21 @@
     const loader = new GLTFLoader();
     const current = { shirts: 0, pants: 0, shoes: 0 };
     const groups = { shirts: new THREE.Group(), pants: new THREE.Group(), shoes: new THREE.Group() };
-    scene.add(groups.shirts, groups.pants, groups.shoes);
+    
+    // Master group to hold all clothing for easy translation and rotation
+    const clothingGroup = new THREE.Group();
+    clothingGroup.add(groups.shirts, groups.pants, groups.shoes);
+    scene.add(clothingGroup);
+    
+    // Initial position: right-center (translated to the right and lower)
+    clothingGroup.position.x = rightCenterX;
+    clothingGroup.position.y = rightCenterY;
+    
+    // Rotation state - start from 0, continuously rotating at the right position
+    let rotationSpeed = 0.005; // radians per frame
+    let currentRotation = 0;
+    let isRotating = true;
+    clothingGroup.rotation.y = 0; // Start at rotation 0 (starting position)
 
     const toastEl = document.getElementById("toast");
     const values = {
@@ -360,11 +454,84 @@
     }
     window.addEventListener("resize", onResize);
 
+    // Welcome overlay setup
+    const welcomeOverlay = document.getElementById("welcome-overlay");
+    const goButton = document.getElementById("go-button");
+    const hud = document.getElementById("hud");
+    
+    let isAnimating = false;
+    const animationDuration = 1200; // milliseconds
+    let animationStartTime = null;
+    let initialRotationValue = 0; // will be set when button is clicked
+    
+    function startAnimation() {
+      if (isAnimating) return;
+      
+      isAnimating = true;
+      isRotating = false; // Stop the rotation
+      welcomeOverlay.classList.add("slide-out");
+      
+      // Capture the current rotation as the initial value
+      initialRotationValue = currentRotation;
+      
+      // Start the clothing animation
+      animationStartTime = performance.now();
+      
+      function animateClothing() {
+        if (!isAnimating) return;
+        
+        const elapsed = performance.now() - animationStartTime;
+        const progress = Math.min(elapsed / animationDuration, 1);
+        
+        // Easing function (ease-out-cubic)
+        const easeProgress = 1 - Math.pow(1 - progress, 3);
+        
+        // Smoothly rotate back to 0 (initial position) while translating to center
+        const targetRotation = 0;
+        currentRotation = initialRotationValue + (targetRotation - initialRotationValue) * easeProgress;
+        clothingGroup.rotation.y = currentRotation;
+        
+        // Smoothly translate from right position to center (horizontally and vertically)
+        const targetX = targetCenterX;
+        clothingGroup.position.x = rightCenterX + (targetX - rightCenterX) * easeProgress;
+        
+        // Smoothly translate from lower position (rightCenterY) to target height (targetCenterY)
+        const targetY = targetCenterY;
+        clothingGroup.position.y = rightCenterY + (targetY - rightCenterY) * easeProgress;
+        
+        // Camera target stays at center (already at 0), no need to animate it
+        
+        if (progress < 1) {
+          requestAnimationFrame(animateClothing);
+        } else {
+          // Animation complete
+          clothingGroup.position.x = targetCenterX;
+          clothingGroup.position.y = targetCenterY;
+          clothingGroup.rotation.y = 0;
+          currentRotation = 0;
+          isAnimating = false;
+          // Show carousel when items reach center
+          hud.classList.add("visible");
+        }
+      }
+      
+      requestAnimationFrame(animateClothing);
+    }
+    
+    goButton.addEventListener("click", startAnimation);
+
     // initial load
     ["shirts", "pants", "shoes"].forEach((type) => loadModel(type, 0));
 
     function animate() {
       requestAnimationFrame(animate);
+      
+      // Rotate clothing in place at the start (continuous rotation around initial offset)
+      if (isRotating) {
+        currentRotation += rotationSpeed;
+        clothingGroup.rotation.y = currentRotation;
+      }
+      
       controls.update();
       renderer.render(scene, camera);
     }
