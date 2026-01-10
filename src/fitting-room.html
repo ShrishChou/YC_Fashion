@@ -345,38 +345,73 @@
     import { GLTFLoader } from "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
     import { RoomEnvironment } from "https://unpkg.com/three@0.160.0/examples/jsm/environments/RoomEnvironment.js";
 
-    // Assets will be loaded dynamically from manifest.json
-    let assets = { shirts: [], pants: [], shoes: [], dresses: [] };
+    // Assets manifest - inline dictionary (no separate file needed)
+    const manifest = {
+      shirts: [
+        "object_0-10.glb",
+        "object_0-11.glb",
+        "object_0-12.glb",
+        "object_0-13.glb",
+        "object_0.glb"
+      ],
+      pants: [
+        "WDressPants1.glb",
+        "pant1.glb",
+        "pant2.glb",
+        "pant3.glb",
+        "pant4.glb",
+        "WDressPants2.glb",
+        "WLeggings1.glb",
+        "WLeggings2.glb",
+        "MDressPants1.glb",
+        "MDressPants2.glb",
+        "wjeans1.glb",
+        "wjeans2.glb",
+        "wjeans3.glb",
+        "mjeans1.glb",
+        "mjeans2.glb",
+        "mjeans3.glb"
+      ],
+      shoes: [
+        "object_0-13.glb",
+        "object_0-15.glb",
+        "WTennisShoes1.glb",
+        "MBasketBallShoes1.glb",
+        "MTennisShoes1.glb"
+      ],
+      dresses: [
+        "wdress1.glb",
+        "wdress2.glb",
+        "wdress3.glb"
+      ],
+      shorts: [
+        "MShorts1.glb",
+        "MShorts2.glb",
+        "WShorts1.glb",
+        "WShorts2.glb",
+        "WSkirt1.glb",
+        "WSkirt2.glb"
+      ]
+    };
     
     // Helper to check if an item is a short
     function isShort(filepath) {
       return filepath.includes('/shorts/');
     }
     
-    // Load manifest and build asset paths automatically
-    async function loadAssetsManifest() {
-      try {
-        const response = await fetch("../objects/manifest.json");
-        const manifest = await response.json();
-        
-        // Merge shorts into pants - shorts are part of pants
-        const pantsItems = manifest.pants ? manifest.pants.map(file => `../objects/pants/${file}`) : [];
-        const shortsItems = manifest.shorts ? manifest.shorts.map(file => `../objects/shorts/${file}`) : [];
-        
-        // Build full paths from manifest
-        assets = {
-          shirts: manifest.shirts ? manifest.shirts.map(file => `../objects/shirts/${file}`) : [],
-          pants: [...pantsItems, ...shortsItems], // Combine pants and shorts
-          shoes: manifest.shoes ? manifest.shoes.map(file => `../objects/shoes/${file}`) : [],
-          dresses: manifest.dresses ? manifest.dresses.map(file => `../objects/dresses/${file}`) : []
-        };
-        
-        console.log("Loaded assets from manifest:", assets);
-      } catch (error) {
-        console.error("Failed to load manifest.json, using empty asset lists:", error);
-        // Fallback to empty arrays - user can add files manually if needed
-      }
-    }
+    // Build asset paths from manifest dictionary
+    const pantsItems = manifest.pants ? manifest.pants.map(file => `../docs/pants/${file}`) : [];
+    const shortsItems = manifest.shorts ? manifest.shorts.map(file => `../docs/shorts/${file}`) : [];
+    
+    // Build full paths from manifest
+    const assets = {
+      shirts: manifest.shirts ? manifest.shirts.map(file => `../docs/shirts/${file}`) : [],
+      pants: [...pantsItems, ...shortsItems], // Combine pants and shorts
+      shoes: manifest.shoes ? manifest.shoes.map(file => `../docs/shoes/${file}`) : [],
+      dresses: manifest.dresses ? manifest.dresses.map(file => `../docs/dresses/${file}`) : []
+    };
+    
+    console.log("Loaded assets from manifest:", assets);
 
     const verticalOffsets = {
       shoes: 1.2,      // raised up more
@@ -394,7 +429,7 @@
 
     // Mobile detection (needed for positioning)
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-    
+
     // Position constants
     // On mobile, start from left; on desktop, start from right
     const rightCenterX = 2.5; // initial position (on the right side of screen - desktop)
@@ -523,7 +558,7 @@
     
     // Normalize rotation to prevent accumulation beyond one rotation
     const MAX_ROTATION = Math.PI * 2; // one full rotation
-    
+
     // Toast notifications removed - no longer showing
     function showToast(message) {
       // Toast functionality disabled
@@ -990,27 +1025,23 @@
     
     goButton.addEventListener("click", startAnimation);
 
-    // Initialize: load manifest first, then load initial models
-    (async () => {
-      await loadAssetsManifest();
-      
-      // Verify we have assets before loading
-      const hasAssets = Object.values(assets).some(arr => arr.length > 0);
-      if (hasAssets) {
-        // Both mobile and desktop: show welcome screen, load initial models
-        // On mobile, welcome screen is full screen
-        // On desktop, it's half screen
-        ["shirts", "pants", "shoes"].forEach((type) => {
-          if (assets[type] && assets[type].length > 0) {
-            loadModel(type, 0);
-          }
-        });
-        // Initialize mode UI
-        updateModeUI();
-      } else {
-        console.error("No assets found. Please check manifest.json");
-      }
-    })();
+    // Initialize: load initial models
+    // Verify we have assets before loading
+    const hasAssets = Object.values(assets).some(arr => arr.length > 0);
+    if (hasAssets) {
+      // Both mobile and desktop: show welcome screen, load initial models
+      // On mobile, welcome screen is full screen
+      // On desktop, it's half screen
+      ["shirts", "pants", "shoes"].forEach((type) => {
+        if (assets[type] && assets[type].length > 0) {
+          loadModel(type, 0);
+        }
+      });
+      // Initialize mode UI
+      updateModeUI();
+    } else {
+      console.error("No assets found in manifest.");
+    }
 
     function animate() {
       requestAnimationFrame(animate);
