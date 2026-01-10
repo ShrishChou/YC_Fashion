@@ -400,15 +400,15 @@
     }
     
     // Build asset paths from manifest dictionary
-    const pantsItems = manifest.pants ? manifest.pants.map(file => `../pants/${file}`) : [];
-    const shortsItems = manifest.shorts ? manifest.shorts.map(file => `../shorts/${file}`) : [];
+    const pantsItems = manifest.pants ? manifest.pants.map(file => `/pants/${file}`) : [];
+    const shortsItems = manifest.shorts ? manifest.shorts.map(file => `/shorts/${file}`) : [];
     
     // Build full paths from manifest
     const assets = {
-      shirts: manifest.shirts ? manifest.shirts.map(file => `../shirts/${file}`) : [],
+      shirts: manifest.shirts ? manifest.shirts.map(file => `/shirts/${file}`) : [],
       pants: [...pantsItems, ...shortsItems], // Combine pants and shorts
-      shoes: manifest.shoes ? manifest.shoes.map(file => `../shoes/${file}`) : [],
-      dresses: manifest.dresses ? manifest.dresses.map(file => `../dresses/${file}`) : []
+      shoes: manifest.shoes ? manifest.shoes.map(file => `/shoes/${file}`) : [],
+      dresses: manifest.dresses ? manifest.dresses.map(file => `/dresses/${file}`) : []
     };
     
     console.log("Loaded assets from manifest:", assets);
