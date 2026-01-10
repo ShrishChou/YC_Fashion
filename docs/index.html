@@ -393,7 +393,19 @@
         "WSkirt2.glb"
       ]
     };
-    
+    const BASE = new URL(".", window.location.href); // e.g. https://shrishchou.github.io/YC_Fashion/
+
+    function u(path) {
+      return new URL(path.replace(/^\/+/, ""), BASE).toString(); // strips any leading /
+    }
+
+    const assets = {
+      shirts:  (manifest.shirts  ?? []).map(f => u(`shirts/${f}`)),
+      pants:   (manifest.pants   ?? []).map(f => u(`pants/${f}`))
+                .concat((manifest.shorts ?? []).map(f => u(`shorts/${f}`))),
+      shoes:   (manifest.shoes   ?? []).map(f => u(`shoes/${f}`)),
+      dresses: (manifest.dresses ?? []).map(f => u(`dresses/${f}`)),
+    };
     // Helper to check if an item is a short
     function isShort(filepath) {
       return filepath.includes('/shorts/');
@@ -404,12 +416,12 @@
     const shortsItems = manifest.shorts ? manifest.shorts.map(file => `/shorts/${file}`) : [];
     
     // Build full paths from manifest
-    const assets = {
-      shirts: manifest.shirts ? manifest.shirts.map(file => `/shirts/${file}`) : [],
-      pants: [...pantsItems, ...shortsItems], // Combine pants and shorts
-      shoes: manifest.shoes ? manifest.shoes.map(file => `/shoes/${file}`) : [],
-      dresses: manifest.dresses ? manifest.dresses.map(file => `/dresses/${file}`) : []
-    };
+    // const assets = {
+    //   shirts: manifest.shirts ? manifest.shirts.map(file => `/shirts/${file}`) : [],
+    //   pants: [...pantsItems, ...shortsItems], // Combine pants and shorts
+    //   shoes: manifest.shoes ? manifest.shoes.map(file => `/shoes/${file}`) : [],
+    //   dresses: manifest.dresses ? manifest.dresses.map(file => `/dresses/${file}`) : []
+    // };
     
     console.log("Loaded assets from manifest:", assets);
 
