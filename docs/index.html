@@ -357,19 +357,19 @@
     // Load manifest and build asset paths automatically
     async function loadAssetsManifest() {
       try {
-        const response = await fetch("../objects/manifest.json");
+        const response = await fetch("/objects/manifest.json");
         const manifest = await response.json();
         
         // Merge shorts into pants - shorts are part of pants
-        const pantsItems = manifest.pants ? manifest.pants.map(file => `../objects/pants/${file}`) : [];
-        const shortsItems = manifest.shorts ? manifest.shorts.map(file => `../objects/shorts/${file}`) : [];
+        const pantsItems = manifest.pants ? manifest.pants.map(file => `/objects/pants/${file}`) : [];
+        const shortsItems = manifest.shorts ? manifest.shorts.map(file => `/objects/shorts/${file}`) : [];
         
         // Build full paths from manifest
         assets = {
-          shirts: manifest.shirts ? manifest.shirts.map(file => `../objects/shirts/${file}`) : [],
+          shirts: manifest.shirts ? manifest.shirts.map(file => `/objects/shirts/${file}`) : [],
           pants: [...pantsItems, ...shortsItems], // Combine pants and shorts
-          shoes: manifest.shoes ? manifest.shoes.map(file => `../objects/shoes/${file}`) : [],
-          dresses: manifest.dresses ? manifest.dresses.map(file => `../objects/dresses/${file}`) : []
+          shoes: manifest.shoes ? manifest.shoes.map(file => `/objects/shoes/${file}`) : [],
+          dresses: manifest.dresses ? manifest.dresses.map(file => `/objects/dresses/${file}`) : []
         };
         
         console.log("Loaded assets from manifest:", assets);
