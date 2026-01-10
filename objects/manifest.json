@@ -1,0 +1,52 @@
+{
+  "shirts": [
+    "object_0-10.glb",
+    "object_0-11.glb",
+    "object_0-12.glb",
+    "object_0-13.glb",
+    "object_0.glb"
+  ],
+  "pants": [
+    "WDressPants1.glb",
+    
+    "pant1.glb",
+    "pant2.glb",
+    "pant3.glb",
+    "pant4.glb",
+    "WDressPants2.glb",
+    "WLeggings1.glb",
+    "WLeggings2.glb",
+    "MDressPants1.glb",
+    "MDressPants2.glb",
+    "wjeans1.glb",
+    "wjeans2.glb",
+    "wjeans3.glb",
+    "mjeans1.glb",
+    "mjeans2.glb",
+    "mjeans3.glb"
+    
+    
+  ],
+  "shoes": [
+    "object_0-13.glb",
+    "object_0-15.glb",
+    "WTennisShoes1.glb",
+    "MBasketBallShoes1.glb",
+    "MTennisShoes1.glb"
+    
+    
+  ],
+  "dresses": [
+    "wdress1.glb",
+    "wdress2.glb",
+    "wdress3.glb"
+  ],
+  "shorts": [
+    "MShorts1.glb",
+    "MShorts2.glb",
+    "WShorts1.glb",
+    "WShorts2.glb",
+    "WSkirt1.glb",
+    "WSkirt2.glb"
+  ]
+}
