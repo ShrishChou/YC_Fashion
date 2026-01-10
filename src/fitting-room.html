@@ -146,13 +146,18 @@
       opacity: 1;
       pointer-events: auto;
     }
-    /* On desktop, hide arrows initially until button is clicked */
+    /* On desktop, hide arrows initially until button is clicked, except dresses */
     @media (min-width: 769px) {
-      .arrow-controls:not(.show-after-click) {
+      .arrow-controls:not(.show-after-click):not(.dresses) {
         opacity: 0 !important;
         pointer-events: none !important;
       }
       .arrow-controls.show-after-click.visible {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+      }
+      /* Dresses arrows always visible on desktop */
+      .arrow-controls.dresses.visible {
         opacity: 1 !important;
         pointer-events: auto !important;
       }
@@ -205,11 +210,41 @@
     .arrow-btn.right:hover::before {
       transform: rotate(45deg) translateX(3px);
     }
+    /* Desktop: position arrows with consistent spacing from center (responsive to viewport) */
     .arrow-btn.left {
-      left: 38%;
+      left: calc(50% - 180px);
     }
     .arrow-btn.right {
-      right: 38%;
+      right: calc(50% - 180px);
+    }
+    /* Tablet: slightly closer spacing */
+    @media (max-width: 1024px) {
+      .arrow-btn.left {
+        left: calc(50% - 140px);
+      }
+      .arrow-btn.right {
+        right: calc(50% - 140px);
+      }
+    }
+    /* Small screens: closer to center */
+    @media (max-width: 900px) {
+      .arrow-btn.left {
+        left: calc(50% - 100px);
+      }
+      .arrow-btn.right {
+        right: calc(50% - 100px);
+      }
+    }
+    /* Mobile: position arrows at screen edges */
+    @media (max-width: 768px) {
+      .arrow-btn.left {
+        left: 10px !important;
+        right: auto !important;
+      }
+      .arrow-btn.right {
+        right: 10px !important;
+        left: auto !important;
+      }
     }
     .arrow-btn.single {
       left: 50%;
@@ -357,11 +392,21 @@
       dresses: 0,      // same z as other items
     };
 
+    // Mobile detection (needed for positioning)
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    
     // Position constants
-    const rightCenterX = 2.5; // initial position (on the right side of screen)
+    // On mobile, start from left; on desktop, start from right
+    const rightCenterX = 2.5; // initial position (on the right side of screen - desktop)
+    const leftCenterX = -2.5; // initial position (on the left side of screen - mobile)
     const targetCenterX = 0; // final center position
     const rightCenterY = -0.5; // initial Y position (lower when on the right)
+    const leftCenterY = -0.5; // initial Y position (lower when on the left)
     const targetCenterY = 0; // final Y position (normal center height)
+    
+    // Set initial position based on device type
+    const initialX = isMobile ? leftCenterX : rightCenterX;
+    const initialY = isMobile ? leftCenterY : rightCenterY;
 
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0x090b12, 12, 30);
@@ -467,8 +512,8 @@
     scene.add(clothingGroup);
     
     // Initial position: right-center (translated to the right and lower)
-    clothingGroup.position.x = rightCenterX;
-    clothingGroup.position.y = rightCenterY;
+    clothingGroup.position.x = initialX;
+    clothingGroup.position.y = initialY;
     
     // Rotation state - start from 0, continuously rotating at the right position
     let rotationSpeed = 0.005; // radians per frame
@@ -478,9 +523,6 @@
     
     // Normalize rotation to prevent accumulation beyond one rotation
     const MAX_ROTATION = Math.PI * 2; // one full rotation
-
-    // Mobile detection
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
     
     // Toast notifications removed - no longer showing
     function showToast(message) {
@@ -904,13 +946,15 @@
         currentRotation = initialRotationValue + (targetRotation - initialRotationValue) * easeProgress;
         clothingGroup.rotation.y = currentRotation;
         
-        // Smoothly translate from right position to center (horizontally and vertically)
+        // Smoothly translate from initial position to center (horizontally and vertically)
+        const startX = isMobile ? leftCenterX : rightCenterX;
+        const startY = isMobile ? leftCenterY : rightCenterY;
         const targetX = targetCenterX;
-        clothingGroup.position.x = rightCenterX + (targetX - rightCenterX) * easeProgress;
+        clothingGroup.position.x = startX + (targetX - startX) * easeProgress;
         
-        // Smoothly translate from lower position (rightCenterY) to target height (targetCenterY)
+        // Smoothly translate from lower position to target height
         const targetY = targetCenterY;
-        clothingGroup.position.y = rightCenterY + (targetY - rightCenterY) * easeProgress;
+        clothingGroup.position.y = startY + (targetY - startY) * easeProgress;
         
         // Camera target stays at center (already at 0), no need to animate it
         
@@ -953,43 +997,16 @@
       // Verify we have assets before loading
       const hasAssets = Object.values(assets).some(arr => arr.length > 0);
       if (hasAssets) {
-        // On mobile, skip welcome screen and auto-start
-        if (isMobile) {
-          welcomeOverlay.style.display = 'none';
-          // Automatically trigger the animation start (but skip the slide-out animation)
-          isAnimating = true;
-          isRotating = false;
-          clothingGroup.position.x = targetCenterX;
-          clothingGroup.position.y = targetCenterY;
-          clothingGroup.rotation.y = 0;
-          currentRotation = 0;
-          isAnimating = false;
-          // Show arrow controls and mode button immediately
-          document.querySelectorAll(".arrow-controls.visible").forEach(ctrl => {
-            ctrl.classList.add("visible", "show-after-click");
-          });
-          const modeButton = document.getElementById('mode-button');
-          if (modeButton) modeButton.classList.add('visible');
-          
-          // Load initial models
-          ["shirts", "pants", "shoes"].forEach((type) => {
-            if (assets[type] && assets[type].length > 0) {
-              loadModel(type, 0);
-            }
-          });
-          // Initialize mode UI
-          updateModeUI();
-        } else {
-          // Desktop: normal flow with welcome screen
-    // initial load
-          ["shirts", "pants", "shoes"].forEach((type) => {
-            if (assets[type] && assets[type].length > 0) {
-              loadModel(type, 0);
-            }
-          });
-          // Initialize mode UI
-          updateModeUI();
-        }
+        // Both mobile and desktop: show welcome screen, load initial models
+        // On mobile, welcome screen is full screen
+        // On desktop, it's half screen
+        ["shirts", "pants", "shoes"].forEach((type) => {
+          if (assets[type] && assets[type].length > 0) {
+            loadModel(type, 0);
+          }
+        });
+        // Initialize mode UI
+        updateModeUI();
       } else {
         console.error("No assets found. Please check manifest.json");
       }
