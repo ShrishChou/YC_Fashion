@@ -652,9 +652,9 @@
               <div class="filter-option-icon">👠</div>
               <div class="filter-option-title">Dress</div>
             </button>
-            <button class="filter-option" data-filter="other">
+            <button class="filter-option" data-filter="dunks">
               <div class="filter-option-icon">👟</div>
-              <div class="filter-option-title">Other</div>
+              <div class="filter-option-title">Dunks</div>
             </button>
           </div>
         </div>
@@ -707,8 +707,8 @@
         "mjeans3.glb"
       ],
       shoes: [
-        "object_0-13.glb",
-        "object_0-15.glb",
+        "dunks.glb",
+        "dunks2.glb",
         "dressmensShoes.glb",
         "dresswomensshoes.glb",
         "dresswomensshoes2.glb",
@@ -1995,18 +1995,11 @@
       if (selectedFilters.shoes.length > 0) {
         assets.shoes = originalAssets.shoes.filter(url => {
           const filename = url.split('/').pop().toLowerCase();
-          if (selectedFilters.shoes.includes('other')) {
-            // For "other", include items that don't match basketball, tennis, or dress
-            const isBasketball = filename.includes('basketball');
-            const isTennis = filename.includes('tennis');
-            const isDress = filename.includes('dress');
-            if (isBasketball || isTennis || isDress) return false;
-            return true;
-          }
           return selectedFilters.shoes.some(filter => {
             if (filter === 'basketball') return filename.includes('basketball');
             if (filter === 'tennis') return filename.includes('tennis');
             if (filter === 'dress') return filename.includes('dress');
+            if (filter === 'dunks') return filename.includes('dunk');
             return false;
           });
         });
