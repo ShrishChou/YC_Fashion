@@ -97,6 +97,40 @@
         top: 35%;
       }
     }
+    /* iPad portrait - full screen layout (like mobile) */
+    @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+      #welcome-overlay {
+        width: 100%;
+      }
+      #welcome-overlay.slide-out {
+        display: none;
+      }
+      /* iPad portrait: position arrows at screen edges */
+      .arrow-controls {
+        width: 100%;
+      }
+      .arrow-btn.left {
+        left: 10px !important;
+        right: auto !important;
+      }
+      .arrow-btn.right {
+        right: 10px !important;
+        left: auto !important;
+      }
+      /* Keep individual clothing type vertical positions */
+      .arrow-controls.shirts {
+        top: 25%;
+      }
+      .arrow-controls.pants {
+        top: 45%;
+      }
+      .arrow-controls.shoes {
+        top: 65%;
+      }
+      .arrow-controls.dresses {
+        top: 35%;
+      }
+    }
     #welcome-content {
       text-align: center;
       max-width: 400px;
@@ -259,8 +293,8 @@
     .arrow-btn.right {
       right: calc(50% - 180px);
     }
-    /* iPad: wider spacing for better usability */
-    @media (min-width: 768px) and (max-width: 1024px) {
+    /* iPad landscape: wider spacing for better usability */
+    @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
       .arrow-btn.left {
         left: calc(50% - 220px);
       }
@@ -409,6 +443,12 @@
         width: 100%;
       }
     }
+    /* iPad portrait - full screen filter overlay */
+    @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+      #filter-overlay {
+        width: 100%;
+      }
+    }
     #filter-content {
       max-width: 500px;
       margin: 0 auto;
@@ -425,6 +465,18 @@
     }
     /* Center filter text on smaller devices */
     @media (max-width: 768px) {
+      #filter-content {
+        text-align: center;
+      }
+      #filter-content h2 {
+        text-align: center;
+      }
+      .filter-category h3 {
+        text-align: center;
+      }
+    }
+    /* Center filter text on iPad portrait */
+    @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
       #filter-content {
         text-align: center;
       }
@@ -735,7 +787,9 @@
     };
 
     // Mobile detection (needed for positioning)
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    // Include iPad portrait (768-1024px width in portrait orientation) as mobile behavior
+    const isIPadPortrait = window.innerWidth >= 769 && window.innerWidth <= 1024 && window.innerHeight > window.innerWidth;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768 || isIPadPortrait;
 
     // Position constants
     // On mobile, start from left; on desktop, start from right
@@ -828,7 +882,7 @@
       { shirt: 4, pant: 2, shoe: 1 }, // Style 3: Random mix
        // Style 4: Random mix
       { shirt: 2, pant: 1, shoe: 0 },
-      { shirt: 0, pant: 2, shoe: 2 } 
+      { shirt: 0, pant: 2, shoe: 5 } 
       
     ];
     let currentStyleIndex = 0;
@@ -1197,29 +1251,31 @@
       }
       
       if (currentMode === 'styles') {
-        // Hide individual controls, reuse pants controls for styles navigation
+        // Hide all individual controls (shirts, pants, shoes, dresses)
         shirtsControls.style.display = 'none';
         shirtsControls.classList.remove('visible');
-        // Use pants controls for styles - they're at the right position
-        pantsControls.style.display = 'flex';
-        pantsControls.classList.add('visible', 'show-after-click');
-        // Change data-type to styles so switchItem handles it correctly
+        
+        pantsControls.style.display = 'none';
+        pantsControls.classList.remove('visible');
+        // Restore pants controls data-type in case it was changed
         const pantsLeftBtn = pantsControls.querySelector('.arrow-btn.left');
         const pantsRightBtn = pantsControls.querySelector('.arrow-btn.right');
-        if (pantsLeftBtn) pantsLeftBtn.setAttribute('data-type', 'styles');
-        if (pantsRightBtn) pantsRightBtn.setAttribute('data-type', 'styles');
+        if (pantsLeftBtn) pantsLeftBtn.setAttribute('data-type', 'pants');
+        if (pantsRightBtn) pantsRightBtn.setAttribute('data-type', 'pants');
         
-        shoesControls = document.querySelector('.arrow-controls.shoes');
+        const shoesControls = document.querySelector('.arrow-controls.shoes');
         if (shoesControls) {
           shoesControls.style.display = 'none';
           shoesControls.classList.remove('visible');
         }
+        
         dressesControls.style.display = 'none';
         dressesControls.classList.remove('visible');
         
+        // Show only the styles controls (middle arrow)
         if (stylesControls) {
-          stylesControls.style.display = 'none';
-          stylesControls.classList.remove('visible');
+          stylesControls.style.display = 'flex';
+          stylesControls.classList.add('visible', 'show-after-click');
         }
         
         modeButton.style.display = 'none';
@@ -1562,6 +1618,8 @@
           navigationState = 'style';
           currentMode = 'styles';
           currentStyleIndex = 0;
+          // Update UI immediately to hide all arrow controls except styles
+          updateModeUI();
           isAnimating = false;
           startAnimation();
         });
