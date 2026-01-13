@@ -1846,8 +1846,10 @@
 
       ],
       dresses: [
+        "Boat-Neck_Tie_Maxi_Dress.glb",
         "Boat-Neck_Tie-Gather_Maxi_Dress.glb",
-        "Black_Strapless_dress.glb",
+        "Off_Shoulder_Maxi_Dress.glb",
+        "Black_Strapless_Dress.glb",
         "Ruffled_Scoopneck_Mini_Dress.glb"
       ],
       shorts: [
@@ -1900,22 +1902,25 @@
     
     console.log("Loaded assets from manifest:", assets);
 
+    // Vertical offsets to stack items vertically
+    // Each item will rotate around its own center at its vertical position
     const verticalOffsets = {
-      shoes: 0,      // lowered to fix off-screen positioning
-      pants: 1.2,      // noticeably above shoes (includes shorts)
-      shirts: 3.3,     // noticeably above pants
-      dresses: 1.5,    // lowered position
+      shoes: 0,      // at ground level
+      pants: 1.2,    // above shoes
+      shirts: 3.3,   // above pants
+      dresses: 2,  // higher position for dresses
     };
 
+    // No horizontal or depth offsets - items stay centered on X and Z
     const zOffsets = {
-      shoes: 0.1,      // moved backward (away from camera)
-      pants: 0,        // noticeably above shoes (includes shorts)
-      shirts: 0,       // noticeably above pants
-      dresses: 0,      // same z as other items
+      shoes: 0,
+      pants: 0,
+      shirts: 0,
+      dresses: 0,
     };
 
     const xOffsets = {
-      shoes: 0.05,      // moved to the right
+      shoes: 0,
       pants: 0,
       shirts: 0,
       dresses: 0,
@@ -2008,6 +2013,11 @@
     rimLight.position.set(-5, 4, -4);
     scene.add(rimLight);
 
+    // Front left light at midway height
+    const frontLeftLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    frontLeftLight.position.set(-3, 1, 3); // Front left, at midway height (around 3.5)
+    scene.add(frontLeftLight);
+
     const loader = new GLTFLoader();
     const current = { shirts: 0, pants: 0, shoes: 0, dresses: 0 };
     
@@ -2045,10 +2055,22 @@
         itemPrices: { shirt: 129, pant: 159, shoe: 99 }
       },
       {
+        name: "Evening Elegance",
+        description: "Sophisticated maxi dress paired with elegant heels",
+        totalPrice: 270,
+        itemPrices: { dress: 170, shoe: 100 }
+      },
+      {
         name: "City Minimal",
         description: "Clean lines and sophisticated neutrals for urban elegance",
         totalPrice: 395,
         itemPrices: { shirt: 145, pant: 151, shoe: 99 }
+      },
+      {
+        name: "Garden Party",
+        description: "Flowing dress with statement heels for special occasions",
+        totalPrice: 275,
+        itemPrices: { dress: 175, shoe: 100 }
       },
       {
         name: "Weekend Casual",
@@ -2077,13 +2099,16 @@
     ];
     
     // Pre-defined style combinations (matches metadata array length)
+    // If dress is defined (>= 0), it's a dress style (dress + shoes)
+    // If dress is -1, it's a regular style (shirt + pants + shoes)
     const styleCombinations = [
-      { shirt: 0, pant: 0, shoe: 0 },
-      { shirt: 6, pant: 12, shoe: 0 },
-      { shirt: 1, pant: 8, shoe: 0 },
-      { shirt: 4, pant: 2, shoe: 1 },
-      { shirt: 2, pant: 1, shoe: 0 },
-      { shirt: 0, pant: 2, shoe: 5 } 
+      { shirt: 0, pant: 0, shoe: 0, dress: -1 },
+      { dress: 0, shoe: 3, shirt: -1, pant: -1 }, // Dress with heels (second style) - Black_Stilleto_Heels is index 3
+      { shirt: 1, pant: 8, shoe: 0, dress: -1 },
+      { dress: 2, shoe: 4, shirt: -1, pant: -1 }, // Dress with heels (fourth style) - Hoop_Heels is index 4
+      { shirt: 4, pant: 2, shoe: 1, dress: -1 },
+      { shirt: 2, pant: 1, shoe: 0, dress: -1 },
+      { shirt: 0, pant: 2, shoe: 5, dress: -1 } 
     ];
     let currentStyleIndex = 0;
     
@@ -2228,64 +2253,78 @@
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
 
-      // Reset position to origin first, then center the model
+      // Reset position to origin and center the model
+      // This ensures rotation happens around the model's center
       object.position.set(0, 0, 0);
-      object.position.sub(center); // center model at origin
+      object.position.sub(center); // Center model at origin
 
-      // Shoes no longer need separation - keep as single model
-
-      // For dresses, adjust vertical offset based on index
-      let yOffset;
-      if (type === "dresses") {
-        if (index === 0) {
-          // First dress - keep at current lower position
-          yOffset = verticalOffsets[type] - box.min.y + 0.25;
-        } else {
-          // Second and third dresses - position higher up
-          const higherOffset = verticalOffsets[type] + 0.4; // Add extra height
-          yOffset = higherOffset - box.min.y + 0.25;
-        }
-      } else {
-        yOffset = verticalOffsets[type] - box.min.y + 0.25; // keep a small gap from the "ground"
-      }
+      // Calculate vertical offset to position item at its Y level
+      // All items use the same vertical offset calculation - no special index handling
+      let yOffset = verticalOffsets[type] - box.min.y + 0.25;
       
+      // Apply vertical offset - item's center will be at (0, yOffset, 0)
+      // This allows each item to rotate around its own center at its vertical position
       object.position.y += yOffset;
 
-      // scale overall, but make shoes significantly smaller
-      // Check if pants item is actually a short and scale it down
+      // Apply additional vertical offset for last two dresses (indices 3 and 4)
+      if (type === "dresses" && (index === 3 )) {
+        object.position.y += 0.4; // Move up vertically
+      }
+      if (type === "dresses" && (index === 4)) {
+        object.position.y += 0.65; // Move up vertically
+      }
+
+      // Apply z-offset for specific items if needed
+      // For dress at index 2, offset it backward (away from camera)
+      if (type === "dresses" && index === 2) {
+        object.position.z -= 0.3; // Move backward (positive Z is away from camera)
+      }
+
+      // Determine scale based on type
       let scaleTarget = 1.0;
-      let zAdjustment = zOffsets[type]; // Start with base z offset
       
       if (type === "shoes") {
-        // Scale down dresswomensshoes slightly more than other shoes
-        if (url.toLowerCase().includes('dresswomensshoes')) {
-          scaleTarget = 0.4; // Slightly smaller than regular shoes (0.5)
+        // Scale down heels
+        if (url.toLowerCase().includes('heels')) {
+          scaleTarget = 0.4;
+        } else if (url.toLowerCase().includes('dresswomensshoes')) {
+          scaleTarget = 0.4;
+        } else if (url.toLowerCase().includes('basketball_shoes')) {
+          scaleTarget = 0.45; // Scale down Adidas Furies slightly
         } else {
           scaleTarget = 0.5;
         }
       } else if (type === "pants") {
         // Check if this is a short based on file path
         const isAShort = isShort(url);
-        scaleTarget = isAShort ? 0.6 : 1.2; // Shorts scaled down, pants normal
-        object.position.y += isAShort ? 0.7:0;
+        scaleTarget = isAShort ? 0.6 : 1.2;
+        // Shorts may need slight vertical adjustment
+        if (isAShort) {
+          object.position.y += 0.7;
+        }
       } else if (type === "dresses") {
-        // First dress (index 0) is larger, others are normal size
-        scaleTarget = (index === 0) ? 1.6 : 1.0; // Increased first dress size
+        // Dresses are scaled up - first two dresses are larger, others are also scaled up
+        scaleTarget = (index === 0 || index === 1||index===2) ? 1.8 : 1.3;
+      } else if (type === "shirts") {
+        // Check for specific items that need different scaling
+        if (url.toLowerCase().includes('puffy_down_jacket') || url.toLowerCase().includes('puffydownjacket')) {
+          scaleTarget = 1.2; // Scale up Puffy Down Jacket
+        } else if (url.toLowerCase().includes('ski_jacket') || url.toLowerCase().includes('skijacket')) {
+          scaleTarget = 1.2; // Scale up Ski Jacket
+        } else {
+          scaleTarget = 1.0; // Default scale for shirts
+        }
       }
       
-      // Apply z offset after all adjustments
-      object.position.z += zAdjustment;
-      
+      // Apply scaling
       const maxDimension = Math.max(size.x, size.y, size.z);
       if (maxDimension > 0) {
         const s = (scaleTarget * 2.0) / maxDimension;
         object.scale.setScalar(s);
       }
       
-      // Position items in place (no carousel movement)
-      // Apply x offset (e.g., shoes offset to the right)
-      object.position.x = (xOffsets[type] !== undefined) ? xOffsets[type] : 0;
-      // Keep z position as is (with any adjustments from above)
+      // X and Z stay at 0 - items are centered horizontally and in depth
+      // Each item rotates around its own center at (0, yOffset, 0)
       // Rotation is set in loadModelToSlot to ensure all items use the same global angle
     }
 
@@ -2332,6 +2371,11 @@
       const normalizedIndex = (index + total) % total;
       const url = assets[type][normalizedIndex];
       
+      // Clear the slot IMMEDIATELY before loading to prevent showing old model
+      carouselSlots[type][slot].clear();
+      // Explicitly reset slot position to prevent accumulation
+      carouselSlots[type][slot].position.set(0, 0, 0);
+      
       // Show loading state with spinner
       showStatusPill('Loading...', false, null, true);
       
@@ -2339,30 +2383,29 @@
       loader.load(
         url,
         (gltf) => {
-            carouselSlots[type][slot].clear();
           gltf.scene.traverse((child) => { child.castShadow = true; });
-            centerAndPlace(gltf.scene, type, slot, url, normalizedIndex);
-            carouselSlots[type][slot].add(gltf.scene);
-            
-            // Store model reference for rotation control (only for current slot)
-            if (slot === 'current') {
-              currentModels[type] = gltf.scene;
-              // Apply current global angle to ensure all items stay aligned
-              gltf.scene.rotation.y = rotationController.getAngle();
-            }
-            
-            hideStatusPill();
-            resolve(gltf.scene);
+          centerAndPlace(gltf.scene, type, slot, url, normalizedIndex);
+          carouselSlots[type][slot].add(gltf.scene);
+          
+          // Store model reference for rotation control (only for current slot)
+          if (slot === 'current') {
+            currentModels[type] = gltf.scene;
+            // Apply current global angle to ensure all items stay aligned
+            gltf.scene.rotation.y = rotationController.getAngle();
+          }
+          
+          hideStatusPill();
+          resolve(gltf.scene);
         },
         undefined,
         (err) => {
           console.error(`Failed to load ${url}`, err);
-            showStatusPill('Failed to load item', true, () => {
-              loadModelToSlot(type, index, slot).then(resolve).catch(reject);
-            });
-            reject(err);
-          }
-        );
+          showStatusPill('Failed to load item', true, () => {
+            loadModelToSlot(type, index, slot).then(resolve).catch(reject);
+          });
+          reject(err);
+        }
+      );
       });
     }
     
@@ -2445,38 +2488,125 @@
     function loadStyleCombination(styleIndex) {
       const style = styleCombinations[styleIndex];
       
-      // Ensure indices are within bounds of original assets
-      const shirtIndex = Math.min(Math.max(0, style.shirt), originalAssets.shirts.length - 1);
-      const pantIndex = Math.min(Math.max(0, style.pant), originalAssets.pants.length - 1);
-      const shoeIndex = Math.min(Math.max(0, style.shoe), originalAssets.shoes.length - 1);
+      // Check if this is a dress style (dress >= 0) or regular style (shirt/pants)
+      const isDressStyle = style.dress !== undefined && style.dress >= 0;
       
-      // For styles mode, always use original assets
-      assets.shirts = [...originalAssets.shirts];
-      assets.pants = [...originalAssets.pants];
-      assets.shoes = [...originalAssets.shoes];
-      
-      // Set current indices
-      current.shirts = shirtIndex;
-      current.pants = pantIndex;
-      current.shoes = shoeIndex;
-      
-      // Load all three items simultaneously
-      const promises = [
-        loadAllCarouselItems('shirts'),
-        loadAllCarouselItems('pants'),
-        loadAllCarouselItems('shoes')
-      ];
-      
-      return Promise.all(promises);
+      if (isDressStyle) {
+        // Dress style: load dress + shoes
+        const dressIndex = Math.min(Math.max(0, style.dress), originalAssets.dresses.length - 1);
+        const shoeIndex = Math.min(Math.max(0, style.shoe), originalAssets.shoes.length - 1);
+        
+        // For styles mode, always use original assets
+        assets.dresses = [...originalAssets.dresses];
+        assets.shoes = [...originalAssets.shoes];
+        
+        // Clear slots BEFORE setting indices to prevent showing wrong items
+        carouselSlots.dresses.current.clear();
+        carouselSlots.shoes.current.clear();
+        
+        // Set current indices
+        current.dresses = dressIndex;
+        current.shoes = shoeIndex;
+        
+        // Visibility is set in switchStyle() before this function is called
+        // Load dress and shoes simultaneously
+        const promises = [
+          loadAllCarouselItems('dresses'),
+          loadAllCarouselItems('shoes')
+        ];
+        
+        return Promise.all(promises);
+      } else {
+        // Regular style: load shirt + pants + shoes
+        const shirtIndex = Math.min(Math.max(0, style.shirt), originalAssets.shirts.length - 1);
+        const pantIndex = Math.min(Math.max(0, style.pant), originalAssets.pants.length - 1);
+        const shoeIndex = Math.min(Math.max(0, style.shoe), originalAssets.shoes.length - 1);
+        
+        // For styles mode, always use original assets
+        assets.shirts = [...originalAssets.shirts];
+        assets.pants = [...originalAssets.pants];
+        assets.shoes = [...originalAssets.shoes];
+        
+        // Clear slots BEFORE setting indices to prevent showing wrong items
+        carouselSlots.shirts.current.clear();
+        carouselSlots.pants.current.clear();
+        carouselSlots.shoes.current.clear();
+        
+        // Set current indices
+        current.shirts = shirtIndex;
+        current.pants = pantIndex;
+        current.shoes = shoeIndex;
+        
+        // Visibility is set in switchStyle() before this function is called
+        // Load all three items simultaneously
+        const promises = [
+          loadAllCarouselItems('shirts'),
+          loadAllCarouselItems('pants'),
+          loadAllCarouselItems('shoes')
+        ];
+        
+        return Promise.all(promises);
+      }
     }
     
     // Switch between styles
     function switchStyle(dir) {
+      // Prevent rapid switching during loading
+      if (carouselAnimationState.shirts || carouselAnimationState.pants || 
+          carouselAnimationState.shoes || carouselAnimationState.dresses) {
+        return;
+      }
+      
       const newIndex = (currentStyleIndex + dir + styleCombinations.length) % styleCombinations.length;
+      const newStyle = styleCombinations[newIndex];
+      const isDressStyle = newStyle.dress !== undefined && newStyle.dress >= 0;
+      
+      // Get current style to check if we're switching types
+      const currentStyle = styleCombinations[currentStyleIndex];
+      const wasDressStyle = currentStyle.dress !== undefined && currentStyle.dress >= 0;
+      
+      // Set visibility IMMEDIATELY and atomically before loading to prevent flashing
+      if (isDressStyle) {
+        // Dress style: hide shirts/pants, show dresses/shoes
+        if (groups.shirts) groups.shirts.visible = false;
+        if (groups.pants) groups.pants.visible = false;
+        if (groups.dresses) groups.dresses.visible = true;
+        if (groups.shoes) groups.shoes.visible = true;
+      } else {
+        // Regular style: hide dresses, show shirts/pants/shoes
+        if (groups.dresses) groups.dresses.visible = false;
+        if (groups.shirts) groups.shirts.visible = true;
+        if (groups.pants) groups.pants.visible = true;
+        if (groups.shoes) groups.shoes.visible = true;
+      }
+      
+      // Update index
       currentStyleIndex = newIndex;
       
-      loadStyleCombination(currentStyleIndex).catch(err => {
+      // Set loading state to prevent rapid switching
+      if (isDressStyle) {
+        carouselAnimationState.dresses = true;
+        carouselAnimationState.shoes = true;
+      } else {
+        carouselAnimationState.shirts = true;
+        carouselAnimationState.pants = true;
+        carouselAnimationState.shoes = true;
+      }
+      
+      // Load style combination
+      loadStyleCombination(currentStyleIndex).then(() => {
+        // Clear loading state after successful load
+        carouselAnimationState.shirts = false;
+        carouselAnimationState.pants = false;
+        carouselAnimationState.shoes = false;
+        carouselAnimationState.dresses = false;
+      }).catch(err => {
         console.error('Error loading style combination:', err);
+        // Clear loading state on error
+        carouselAnimationState.shirts = false;
+        carouselAnimationState.pants = false;
+        carouselAnimationState.shoes = false;
+        carouselAnimationState.dresses = false;
       });
       
       // Update style card
@@ -2721,6 +2851,16 @@
       if (name.includes('nike')) price += 25;
       if (name.includes('adidas')) price += 20;
       
+      // Dress-specific adjustments
+      if (type === 'dresses') {
+        if (name.includes('maxi')) price += 30; // Maxi dresses are premium
+        if (name.includes('mini')) price -= 10; // Mini dresses slightly less
+        if (name.includes('strapless')) price += 15; // Strapless dresses premium
+        if (name.includes('off-shoulder') || name.includes('off_shoulder')) price += 20; // Off-shoulder style premium
+        if (name.includes('boat-neck') || name.includes('boat_neck')) price += 15; // Boat neck style premium
+        if (name.includes('ruffled')) price += 25; // Ruffled details premium
+      }
+      
       // Item-specific adjustments
       if (type === 'shirts') {
         if (name.includes('sweater')) price += 15;
@@ -2748,6 +2888,9 @@
         if (name.includes('maxi')) price += 30;
         if (name.includes('mini')) price -= 15;
         if (name.includes('strapless')) price += 20;
+        if (name.includes('off-shoulder') || name.includes('off_shoulder')) price += 20; // Off-shoulder style premium
+        if (name.includes('boat-neck') || name.includes('boat_neck')) price += 15; // Boat neck style premium
+        if (name.includes('ruffled')) price += 25; // Ruffled details premium
       }
       
       // Round to nearest 5
@@ -2788,6 +2931,9 @@
         if (name.includes('mini')) tags.push('Mini');
         if (name.includes('strapless')) tags.push('Strapless');
         if (name.includes('ruffled')) tags.push('Ruffled');
+        if (name.includes('off-shoulder') || name.includes('off_shoulder')) tags.push('Off-Shoulder');
+        if (name.includes('boat-neck') || name.includes('boat_neck')) tags.push('Boat Neck');
+        if (name.includes('scoopneck') || name.includes('scoop_neck')) tags.push('Scoop Neck');
       }
       
       // Brand tags
@@ -3047,11 +3193,22 @@
         restoreOriginalAssets();
         currentStyleIndex = 0;
         
-        // Show shirts, pants, and shoes for styles
-        if (groups.shirts) groups.shirts.visible = true;
-        if (groups.pants) groups.pants.visible = true;
-        if (groups.shoes) groups.shoes.visible = true;
-        if (groups.dresses) groups.dresses.visible = false;
+        // Check what the first style is and set visibility accordingly
+        const firstStyle = styleCombinations[0];
+        const isDressStyle = firstStyle.dress !== undefined && firstStyle.dress >= 0;
+        
+        // Set visibility based on first style type
+        if (isDressStyle) {
+          if (groups.shirts) groups.shirts.visible = false;
+          if (groups.pants) groups.pants.visible = false;
+          if (groups.dresses) groups.dresses.visible = true;
+          if (groups.shoes) groups.shoes.visible = true;
+        } else {
+          if (groups.shirts) groups.shirts.visible = true;
+          if (groups.pants) groups.pants.visible = true;
+          if (groups.shoes) groups.shoes.visible = true;
+          if (groups.dresses) groups.dresses.visible = false;
+        }
         
         // Load first style combination
         loadStyleCombination(currentStyleIndex).catch(err => {
