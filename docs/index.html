@@ -22,6 +22,311 @@
       height: 100%;
       display: block;
     }
+    #topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(9, 11, 18, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      z-index: 250;
+      box-sizing: border-box;
+    }
+    .topbar-left {
+      flex: 0 0 auto;
+    }
+    .wordmark {
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      color: #e6e9f2;
+      text-transform: lowercase;
+    }
+    .topbar-center {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+    }
+    .nav-link {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(230, 233, 242, 0.7);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: color 0.2s ease;
+      cursor: pointer;
+    }
+    .nav-link:hover {
+      color: rgba(230, 233, 242, 1);
+    }
+    .topbar-right {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-button {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #e6e9f2;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+    }
+    .demo-text-short {
+      display: none;
+    }
+    .nav-button:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    #status-pill {
+      position: absolute;
+      top: 72px;
+      right: 32px;
+      background: rgba(9, 11, 18, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: rgba(230, 233, 242, 0.9);
+      z-index: 251;
+      transition: opacity 0.3s ease;
+    }
+    #status-pill.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .status-text {
+      font-weight: 500;
+    }
+    .status-retry {
+      background: rgba(63, 94, 251, 0.2);
+      border: 1px solid rgba(106, 133, 255, 0.3);
+      color: #6a85ff;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .status-retry:hover {
+      background: rgba(63, 94, 251, 0.3);
+      border-color: rgba(106, 133, 255, 0.5);
+    }
+    .status-retry.hidden {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      #topbar {
+        padding: 0 20px;
+        height: 56px;
+      }
+      .topbar-center {
+        gap: 16px;
+      }
+      .nav-link {
+        font-size: 12px;
+      }
+      .nav-button {
+        padding: 6px 16px;
+        font-size: 12px;
+      }
+      #status-pill {
+        top: 64px;
+        right: 20px;
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+    }
+    @media (max-width: 480px) {
+      #topbar {
+        padding: 0 12px;
+      }
+      .wordmark {
+        font-size: 16px;
+        letter-spacing: 1px;
+      }
+      .topbar-center {
+        gap: 10px;
+      }
+      .nav-link {
+        font-size: 10px;
+        letter-spacing: 0.3px;
+      }
+      .nav-button {
+        padding: 6px 12px;
+        font-size: 11px;
+      }
+      .demo-text-full {
+        display: none;
+      }
+      .demo-text-short {
+        display: inline;
+      }
+    }
+    #demo-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0.3s;
+    }
+    #demo-modal.visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .demo-modal-content {
+      position: relative;
+      background: rgba(9, 11, 18, 0.98);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 480px;
+      width: 90%;
+      box-sizing: border-box;
+      transform: scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #demo-modal.visible .demo-modal-content {
+      transform: scale(1);
+    }
+    .demo-modal-header {
+      margin-bottom: 24px;
+    }
+    .demo-modal-header h2 {
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: -0.5px;
+      color: #e6e9f2;
+      margin: 0 0 8px 0;
+    }
+    .demo-modal-header p {
+      font-size: 15px;
+      color: rgba(230, 233, 242, 0.6);
+      margin: 0;
+    }
+    .demo-modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .demo-modal-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 14px 18px;
+      color: #e6e9f2;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .demo-modal-input:focus {
+      outline: none;
+      border-color: rgba(106, 133, 255, 0.4);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .demo-modal-input::placeholder {
+      color: rgba(230, 233, 242, 0.4);
+    }
+    .demo-modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .demo-modal-button {
+      flex: 1;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      font-family: inherit;
+    }
+    .demo-modal-button.cancel {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(230, 233, 242, 0.8);
+    }
+    .demo-modal-button.cancel:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .demo-modal-button.send {
+      background: linear-gradient(135deg, #3f5efb 0%, #6a85ff 100%);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(82, 114, 255, 0.3);
+    }
+    .demo-modal-button.send:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(82, 114, 255, 0.4);
+    }
+    .demo-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: rgba(230, 233, 242, 0.6);
+      font-size: 24px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      line-height: 1;
+      padding: 0;
+    }
+    .demo-modal-close:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(230, 233, 242, 0.9);
+    }
+    @media (max-width: 768px) {
+      .demo-modal-content {
+        padding: 32px 24px;
+      }
+      .demo-modal-header h2 {
+        font-size: 24px;
+      }
+    }
     #hud {
       position: absolute;
       left: 50%;
@@ -43,13 +348,13 @@
       opacity: 1;
       pointer-events: auto;
     }
-    #welcome-overlay {
-      position: absolute;
+    #intro-overlay {
+      position: fixed;
       left: 0;
       top: 0;
-      width: 50%;
+      width: 100%;
       height: 100%;
-      background: rgba(9, 11, 18, 0.95);
+      background: rgba(9, 11, 18, 0.98);
       backdrop-filter: blur(20px);
       display: flex;
       flex-direction: column;
@@ -57,19 +362,18 @@
       align-items: center;
       padding: 40px;
       box-sizing: border-box;
-      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 100;
+      z-index: 200;
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
     }
-    #welcome-overlay.slide-out {
-      transform: translateX(-100%);
+    #intro-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
     }
     /* Mobile styles - full screen layout */
     @media (max-width: 768px) {
-      #welcome-overlay {
-        width: 100%;
-      }
-      #welcome-overlay.slide-out {
-        display: none;
+      #intro-overlay {
+        padding: 20px;
       }
       /* Mobile: position arrows at screen edges */
       .arrow-controls {
@@ -99,12 +403,6 @@
     }
     /* iPad portrait - full screen layout (like mobile) */
     @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
-      #welcome-overlay {
-        width: 100%;
-      }
-      #welcome-overlay.slide-out {
-        display: none;
-      }
       /* iPad portrait: position arrows at screen edges */
       .arrow-controls {
         width: 100%;
@@ -131,24 +429,61 @@
         top: 35%;
       }
     }
-    #welcome-content {
+    #intro-content {
       text-align: center;
-      max-width: 400px;
+      max-width: 600px;
     }
-    #welcome-content h1 {
-      font-size: 48px;
-      font-weight: 700;
-      margin: 0 0 20px 0;
-      background: linear-gradient(135deg, #9fb3ff 0%, #6a85ff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    #intro-content h1 {
+      font-size: 64px;
+      font-weight: 300;
+      letter-spacing: -1px;
+      margin: 0 0 24px 0;
+      color: #e6e9f2;
+      line-height: 1.2;
     }
-    #welcome-content p {
-      font-size: 18px;
-      color: rgba(230, 233, 242, 0.8);
-      margin: 0 0 40px 0;
+    #intro-content .subhead {
+      font-size: 22px;
+      font-weight: 400;
+      color: rgba(230, 233, 242, 0.75);
+      margin: 0 0 16px 0;
       line-height: 1.6;
+    }
+    #intro-content .credibility {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(230, 233, 242, 0.5);
+      margin: 0 0 48px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    #intro-content .beta-tag {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(230, 233, 242, 0.4);
+      margin: 0 0 56px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    #intro-start-button {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #e6e9f2;
+      padding: 18px 56px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: uppercase;
+    }
+    #intro-start-button:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    #intro-start-button:active {
+      transform: translateY(0);
     }
     #welcome-buttons {
       display: flex;
@@ -189,27 +524,6 @@
       box-shadow: 0 15px 40px rgba(82, 114, 255, 0.5);
     }
     .welcome-button:active {
-      transform: translateY(0);
-    }
-    /* Legacy go-button styling for compatibility */
-    #go-button {
-      background: linear-gradient(135deg, #3f5efb 0%, #6a85ff 100%);
-      border: none;
-      color: #fff;
-      padding: 16px 48px;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 10px 30px rgba(82, 114, 255, 0.4);
-    }
-    #go-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 40px rgba(82, 114, 255, 0.5);
-    }
-    #go-button:active {
       transform: translateY(0);
     }
     .arrow-controls {
@@ -386,32 +700,8 @@
     #mode-button:active {
       transform: translateX(-50%) translateY(0);
     }
-    #back-button {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      padding: 10px 20px;
-      background: rgba(63, 94, 251, 0.8);
-      border: none;
-      color: #fff;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease, background 0.2s ease;
-      z-index: 200;
-    }
-    #back-button.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    #back-button:hover {
-      background: rgba(63, 94, 251, 1);
-    }
     .arrow-controls.styles {
-      top: 30%;
+      top: 45%;
       left: 0;
       right: 0;
     }
@@ -426,13 +716,12 @@
       backdrop-filter: blur(20px);
       display: flex;
       flex-direction: column;
-      padding: 40px;
       box-sizing: border-box;
       z-index: 150;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
-      overflow-y: auto;
+      overflow: hidden;
     }
     #filter-overlay.visible {
       opacity: 1;
@@ -453,15 +742,120 @@
       max-width: 500px;
       margin: 0 auto;
       width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 40px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      padding-bottom: 100px;
     }
     #filter-content h2 {
       font-size: 32px;
-      font-weight: 700;
-      margin: 0 0 30px 0;
-      background: linear-gradient(135deg, #9fb3ff 0%, #6a85ff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-weight: 300;
+      letter-spacing: -0.5px;
+      margin: 0 0 32px 0;
+      color: #e6e9f2;
+    }
+    #filter-selected {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      min-height: 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    #filter-selected.empty {
+      opacity: 0.5;
+    }
+    .filter-selected-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(230, 233, 242, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .filter-selected-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .filter-selected-tag {
+      background: rgba(63, 94, 251, 0.15);
+      border: 1px solid rgba(106, 133, 255, 0.3);
+      color: #9fb3ff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    #filter-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 50%;
+      background: rgba(9, 11, 18, 0.98);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 20px 40px;
+      display: flex;
+      gap: 16px;
+      z-index: 151;
+      box-sizing: border-box;
+    }
+    @media (max-width: 768px) {
+      #filter-footer {
+        width: 100%;
+        padding: 16px 20px;
+      }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+      #filter-footer {
+        width: 100%;
+      }
+    }
+    #reset-filters-button {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(230, 233, 242, 0.8);
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    #reset-filters-button:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: rgba(230, 233, 242, 1);
+    }
+    #apply-filters-button {
+      flex: 1;
+      background: linear-gradient(135deg, #3f5efb 0%, #6a85ff 100%);
+      border: none;
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 15px rgba(82, 114, 255, 0.3);
+    }
+    #apply-filters-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(82, 114, 255, 0.4);
+    }
+    #apply-filters-button:active {
+      transform: translateY(0);
     }
     /* Center filter text on smaller devices */
     @media (max-width: 768px) {
@@ -488,92 +882,701 @@
       }
     }
     .filter-category {
-      margin-bottom: 40px;
+      margin-bottom: 32px;
     }
     .filter-category h3 {
-      font-size: 20px;
-      font-weight: 600;
-      margin: 0 0 20px 0;
-      color: #e6e9f2;
+      font-size: 16px;
+      font-weight: 500;
+      margin: 0 0 16px 0;
+      color: rgba(230, 233, 242, 0.8);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     .filter-options {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
     }
     .filter-option {
-      aspect-ratio: 1;
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      color: #e6e9f2;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: rgba(230, 233, 242, 0.9);
       cursor: pointer;
       transition: all 0.2s ease;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 14px 20px;
       text-align: center;
+      min-height: 48px;
     }
     .filter-option:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.15);
     }
     .filter-option.selected {
-      background: linear-gradient(135deg, #3f5efb 0%, #6a85ff 100%);
-      border-color: #6a85ff;
-      color: #fff;
-      box-shadow: 0 4px 15px rgba(106, 133, 255, 0.4);
-    }
-    .filter-option-icon {
-      font-size: 32px;
-      margin-bottom: 8px;
+      background: rgba(63, 94, 251, 0.15);
+      border-color: rgba(106, 133, 255, 0.4);
+      color: #9fb3ff;
     }
     .filter-option-title {
       font-size: 14px;
       font-weight: 500;
       margin: 0;
-    }
-    #apply-filters-button {
-      margin-top: 30px;
-      padding: 16px 48px;
-      background: linear-gradient(135deg, #3f5efb 0%, #6a85ff 100%);
-      border: none;
-      color: #fff;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 10px 30px rgba(82, 114, 255, 0.4);
-      width: 100%;
-    }
-    #apply-filters-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 40px rgba(82, 114, 255, 0.5);
-    }
-    #apply-filters-button:active {
-      transform: translateY(0);
+      text-transform: capitalize;
     }
     /* Toast removed */
+    
+    /* Primary Carousel Control - Single centered control */
+    #primary-carousel-control {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    #primary-carousel-control.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .primary-carousel-btn {
+      width: 56px;
+      height: 56px;
+      background: rgba(9, 11, 18, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 0;
+    }
+    .primary-carousel-btn:hover {
+      background: rgba(9, 11, 18, 0.85);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+    .primary-carousel-btn::before {
+      content: '';
+      display: block;
+      width: 18px;
+      height: 18px;
+      border-top: 3px solid rgba(230, 233, 242, 0.85);
+      border-right: 3px solid rgba(230, 233, 242, 0.85);
+      transition: all 0.3s ease;
+    }
+    .primary-carousel-btn.left::before {
+      transform: rotate(-135deg);
+    }
+    .primary-carousel-btn.right::before {
+      transform: rotate(45deg);
+    }
+    .primary-carousel-btn:hover::before {
+      border-color: rgba(230, 233, 242, 1);
+    }
+    .primary-carousel-btn.left:hover::before {
+      transform: rotate(-135deg) translateX(-3px);
+    }
+    .primary-carousel-btn.right:hover::before {
+      transform: rotate(45deg) translateX(3px);
+    }
+    
+    /* Build Mode Tabs */
+    #build-mode-tabs {
+      position: absolute;
+      bottom: 160px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      background: rgba(9, 11, 18, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 6px;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    #build-mode-tabs.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .build-tab {
+      padding: 10px 20px;
+      background: transparent;
+      border: none;
+      color: rgba(230, 233, 242, 0.6);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      text-transform: capitalize;
+    }
+    .build-tab:hover {
+      color: rgba(230, 233, 242, 0.8);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .build-tab.active {
+      background: rgba(106, 133, 255, 0.2);
+      color: #9fb3ff;
+    }
+    
+    /* Product Card Overlay */
+    /* Product Cards Backdrop (for mobile overlay) */
+    #product-cards-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 150;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    #product-cards-backdrop.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    /* Product Cards Toggle Button (for mobile/narrow screens) */
+    #product-cards-toggle {
+      position: fixed;
+      right: 16px;
+      bottom: 80px;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      color: #000;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 140;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      font-family: inherit;
+      padding: 0;
+      filter: grayscale(100%) contrast(1.2);
+    }
+    
+    #product-cards-toggle:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+    
+    #product-cards-toggle.active {
+      background: rgba(0, 0, 0, 0.9);
+      border-color: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      filter: grayscale(0%);
+    }
+    
+    /* Product Cards Container (for Collections/Build mode) */
+    #product-cards-container {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 160;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      max-width: 280px;
+    }
+    
+    /* Individual product cards can be shown/hidden */
+    .product-card[data-type] {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .product-card.hidden {
+      display: none;
+    }
+    
+    #product-cards-container.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    #product-cards-container.visible .product-card {
+      pointer-events: auto;
+    }
+    
+    .product-card {
+      width: 260px;
+      background: rgba(9, 11, 18, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px;
+      box-sizing: border-box;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .product-card-left {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .product-card-right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    
+    .product-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #e6e9f2;
+      margin: 0 0 6px 0;
+      line-height: 1.4;
+    }
+    
+    .product-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 2px;
+    }
+    
+    .product-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-size: 10px;
+      color: rgba(230, 233, 242, 0.7);
+      font-weight: 400;
+    }
+    
+    .product-price {
+      font-size: 15px;
+      font-weight: 500;
+      color: #e6e9f2;
+      white-space: nowrap;
+    }
+    
+    .product-add-cart-btn {
+      padding: 5px 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 500;
+      color: #e6e9f2;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    
+    .product-add-cart-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Style Card (for Looks mode) - matches collections format */
+    #style-card {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 260px;
+      background: rgba(9, 11, 18, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 160;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 280px;
+    }
+    
+    #style-card.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .style-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #e6e9f2;
+      margin: 0 0 6px 0;
+      line-height: 1.4;
+    }
+    
+    .style-description {
+      font-size: 11px;
+      color: rgba(230, 233, 242, 0.7);
+      line-height: 1.4;
+      margin: 0 0 4px 0;
+    }
+    
+    .style-card-right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    
+    .style-total-price {
+      font-size: 15px;
+      font-weight: 500;
+      color: #e6e9f2;
+      white-space: nowrap;
+    }
+    
+    .style-add-cart-btn {
+      padding: 5px 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 500;
+      color: #e6e9f2;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    
+    .style-add-cart-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Medium screens - reduce card width */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      #style-card {
+        right: 20px;
+        max-width: 260px;
+        width: 260px;
+        padding: 12px;
+      }
+    }
+    
+    /* Medium screens - reduce card width */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      #style-card {
+        right: 20px;
+        max-width: 260px;
+        width: 260px;
+        padding: 12px;
+      }
+    }
+    
+    /* Narrow screens - show toggle button and modal overlay */
+    @media (max-width: 768px) {
+      #style-card {
+        position: fixed;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        top: auto;
+        transform: translateY(100%);
+        width: 100%;
+        max-width: 100%;
+        border-radius: 20px 20px 0 0;
+        padding: 16px;
+        background: rgba(9, 11, 18, 0.98);
+        backdrop-filter: blur(20px);
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+      
+      #style-card.visible {
+        transform: translateY(0);
+      }
+      
+      .style-name {
+        font-size: 13px;
+      }
+      
+      .style-description {
+        font-size: 11px;
+      }
+      
+      .style-total-price {
+        font-size: 15px;
+      }
+      
+      .style-add-cart-btn {
+        font-size: 10px;
+        padding: 5px 10px;
+      }
+    }
+    
+    /* Dresses Card Container - same styling as product cards */
+    #dresses-card-container {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 160;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      max-width: 280px;
+    }
+
+    #dresses-card-container.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #dresses-card-container .product-card {
+      width: 260px;
+    }
+    
+    @media (max-width: 1024px) and (min-width: 769px) {
+      #dresses-card-container {
+        right: 20px;
+        max-width: 260px;
+      }
+      
+      #dresses-card-container .product-card {
+        width: 260px;
+        padding: 12px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      #dresses-card-container {
+        position: fixed;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        top: auto;
+        transform: translateY(100%);
+        width: 100%;
+        max-width: 100%;
+        max-height: 70vh;
+        padding: 16px;
+        border-radius: 20px 20px 0 0;
+        background: rgba(9, 11, 18, 0.98);
+        backdrop-filter: blur(20px);
+        overflow-y: auto;
+      }
+      
+      #dresses-card-container.visible {
+        transform: translateY(0);
+      }
+      
+      #dresses-card-container .product-card {
+        width: 100%;
+        padding: 12px;
+      }
+    }
+    
+    /* Very narrow screens */
+    @media (max-width: 480px) {
+      #style-card {
+        max-height: 75vh;
+        padding: 12px;
+      }
+    }
+    #product-cards-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    #product-cards-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    #product-cards-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+    /* Medium screens - reduce card width */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      #product-cards-container {
+        right: 20px;
+        max-width: 260px;
+      }
+      
+      .product-card {
+        width: 260px;
+        padding: 12px;
+      }
+    }
+    
+    /* Narrow screens - show toggle button and modal overlay */
+    @media (max-width: 768px) {
+      #product-cards-toggle {
+        display: flex;
+      }
+      
+      #product-cards-container {
+        position: fixed;
+        right: 0;
+        left: 0;
+        top: auto;
+        bottom: 0;
+        transform: translateY(100%);
+        width: 100%;
+        max-width: 100%;
+        max-height: 70vh;
+        gap: 10px;
+        padding: 16px;
+        border-radius: 20px 20px 0 0;
+        background: rgba(9, 11, 18, 0.98);
+        backdrop-filter: blur(20px);
+        overflow-y: auto;
+      }
+      
+      #product-cards-container.visible {
+        transform: translateY(0);
+      }
+      
+      .product-card {
+        width: 100%;
+        padding: 12px;
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .product-card-right {
+        align-items: flex-start;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      
+      .product-name {
+        font-size: 13px;
+      }
+      
+      .product-price {
+        font-size: 15px;
+      }
+      
+      .product-tag {
+        font-size: 10px;
+        padding: 3px 8px;
+      }
+      
+      .product-add-cart-btn {
+        font-size: 10px;
+        padding: 5px 10px;
+      }
+    }
+    
+    /* iPad portrait - show toggle button */
+    @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+      #product-cards-toggle {
+        display: flex;
+      }
+    }
+    
+    /* Very narrow screens */
+    @media (max-width: 480px) {
+      #product-cards-toggle {
+        right: 12px;
+        bottom: 70px;
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+      }
+      
+      #product-cards-container {
+        max-height: 75vh;
+        padding: 12px;
+      }
+    }
   </style>
 </head>
 <body>
   <div id="app">
     <canvas id="canvas"></canvas>
-    <div id="welcome-overlay">
-      <div id="welcome-content">
-        <h1>Welcome</h1>
-        <p>Experience our 3D fitting room. Explore different styles and see how they look together.</p>
-        <div id="welcome-buttons" class="two-buttons">
-          <button class="welcome-button" id="free-browse-button">Free Browse</button>
-          <button class="welcome-button" id="specific-button">Specific</button>
-        </div>
+    <div id="topbar">
+      <div class="topbar-left">
+        <div class="wordmark">mirim</div>
+      </div>
+      <div class="topbar-center">
+        <a href="#" class="nav-link" id="nav-styles">Styles</a>
+        <a href="#" class="nav-link" id="nav-collection">Collection</a>
+        <a href="#" class="nav-link" id="nav-dresses">Dresses</a>
+      </div>
+      <div class="topbar-right">
+        <button class="nav-button" id="request-demo-button">
+          <span class="demo-text-full">Request demo</span>
+          <span class="demo-text-short">Demo</span>
+        </button>
+      </div>
+      <div id="status-pill" class="status-pill hidden">
+        <span class="status-text"></span>
+        <button class="status-retry hidden">Retry</button>
       </div>
     </div>
+    <div id="intro-overlay">
+      <div id="intro-content">
+        <h1>Curate Your Style</h1>
+        <p class="subhead">Discover curated capsules and designer pieces in an immersive 3D experience.</p>
+        <p class="credibility">Curated Capsules • Designer Boutiques</p>
+        <p class="beta-tag">Beta</p>
+        <button id="intro-start-button">Start</button>
+      </div>
+    </div>
+    <div id="demo-modal">
+      <div class="demo-modal-content">
+        <button class="demo-modal-close" id="demo-modal-close">&times;</button>
+        <div class="demo-modal-header">
+          <h2>Request a Demo</h2>
+          <p>We'll get back to you soon</p>
+        </div>
+        <form class="demo-modal-form" id="demo-form" action="https://formspree.io/f/xkoonvzb" method="POST">
+          <input type="email" name="email" class="demo-modal-input" id="demo-email" placeholder="your@email.com" required />
+          <div class="demo-modal-actions">
+            <button type="button" class="demo-modal-button cancel" id="demo-modal-cancel">Cancel</button>
+            <button type="submit" class="demo-modal-button send">Send</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Individual arrow controls for each clothing type -->
     <div class="arrow-controls shirts visible" data-type="shirts" id="shirts-controls">
       <button class="arrow-btn left" data-type="shirts" data-dir="-1"></button>
       <button class="arrow-btn right" data-type="shirts" data-dir="1"></button>
@@ -586,28 +1589,109 @@
       <button class="arrow-btn left" data-type="shoes" data-dir="-1"></button>
       <button class="arrow-btn right" data-type="shoes" data-dir="1"></button>
       </div>
-    <div class="arrow-controls dresses" data-type="dresses" style="display: none;">
+    <div class="arrow-controls dresses" data-type="dresses">
       <button class="arrow-btn left" data-type="dresses" data-dir="-1"></button>
       <button class="arrow-btn right" data-type="dresses" data-dir="1"></button>
     </div>
-    <button id="mode-button">Dresses</button>
-    <button id="back-button">← Back</button>
-    <div class="arrow-controls styles" data-type="styles" id="styles-controls" style="display: none;">
+    <div class="arrow-controls styles" data-type="styles" id="styles-controls">
       <button class="arrow-btn left" data-type="styles" data-dir="-1"></button>
       <button class="arrow-btn right" data-type="styles" data-dir="1"></button>
     </div>
+    
+    <!-- Primary Carousel Control (for Looks and Dresses modes) -->
+    <div id="primary-carousel-control">
+      <button class="primary-carousel-btn left" id="primary-carousel-left"></button>
+      <button class="primary-carousel-btn right" id="primary-carousel-right"></button>
+    </div>
+    
+    <!-- Style Card (for Looks mode) -->
+    <div id="style-card">
+      <div class="style-name" id="style-name">Style Name</div>
+      <div class="style-description" id="style-description">Style description</div>
+      <div class="style-card-right">
+        <div class="style-total-price" id="style-total-price">$0</div>
+        <button class="style-add-cart-btn">Add to Cart</button>
+      </div>
+    </div>
+    
+    <!-- Dresses Card (for Dresses mode) -->
+    <div id="dresses-card-container">
+      <div class="product-card" data-type="dresses" id="product-card-dresses">
+        <div class="product-card-left">
+          <div class="product-name" id="product-name-dresses">Item Name</div>
+          <div class="product-tags" id="product-tags-dresses"></div>
+        </div>
+        <div class="product-card-right">
+          <div class="product-price" id="product-price-dresses">$0</div>
+          <button class="product-add-cart-btn">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card" data-type="shoes" id="product-card-shoes-dresses">
+        <div class="product-card-left">
+          <div class="product-name" id="product-name-shoes-dresses">Item Name</div>
+          <div class="product-tags" id="product-tags-shoes-dresses"></div>
+        </div>
+        <div class="product-card-right">
+          <div class="product-price" id="product-price-shoes-dresses">$0</div>
+          <button class="product-add-cart-btn">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Cards Overlay (for Collections/Build mode) -->
+    <div id="product-cards-backdrop"></div>
+    <button id="product-cards-toggle" aria-label="Toggle product details">i</button>
+    <div id="product-cards-container">
+      <!-- Shirts Card -->
+      <div class="product-card" data-type="shirts" id="product-card-shirts">
+        <div class="product-card-left">
+          <div class="product-name" id="product-name-shirts">Item Name</div>
+          <div class="product-tags" id="product-tags-shirts"></div>
+        </div>
+        <div class="product-card-right">
+          <div class="product-price" id="product-price-shirts">$0</div>
+          <button class="product-add-cart-btn">Add to Cart</button>
+        </div>
+      </div>
+      
+      <!-- Pants Card -->
+      <div class="product-card" data-type="pants" id="product-card-pants">
+        <div class="product-card-left">
+          <div class="product-name" id="product-name-pants">Item Name</div>
+          <div class="product-tags" id="product-tags-pants"></div>
+        </div>
+        <div class="product-card-right">
+          <div class="product-price" id="product-price-pants">$0</div>
+          <button class="product-add-cart-btn">Add to Cart</button>
+        </div>
+      </div>
+      
+      <!-- Shoes Card -->
+      <div class="product-card" data-type="shoes" id="product-card-shoes">
+        <div class="product-card-left">
+          <div class="product-name" id="product-name-shoes">Item Name</div>
+          <div class="product-tags" id="product-tags-shoes"></div>
+        </div>
+        <div class="product-card-right">
+          <div class="product-price" id="product-price-shoes">$0</div>
+          <button class="product-add-cart-btn">Add to Cart</button>
+        </div>
+      </div>
+    </div>
     <div id="filter-overlay">
       <div id="filter-content">
-        <h2>Filter Clothing</h2>
+        <h2>Build Your Look</h2>
+        <div id="filter-selected" class="empty">
+          <div class="filter-selected-label">Selected</div>
+          <div class="filter-selected-items" id="filter-selected-items"></div>
+        </div>
         <div class="filter-category">
           <h3>Tops</h3>
           <div class="filter-options" id="tops-options">
             <button class="filter-option" data-filter="shirt">
-              <div class="filter-option-icon">👕</div>
               <div class="filter-option-title">Shirts</div>
             </button>
             <button class="filter-option" data-filter="jacket">
-              <div class="filter-option-icon">🧥</div>
               <div class="filter-option-title">Jackets</div>
             </button>
           </div>
@@ -616,23 +1700,18 @@
           <h3>Bottoms</h3>
           <div class="filter-options" id="bottoms-options">
             <button class="filter-option" data-filter="shorts">
-              <div class="filter-option-icon">🩳</div>
               <div class="filter-option-title">Shorts</div>
             </button>
             <button class="filter-option" data-filter="skirt">
-              <div class="filter-option-icon">👗</div>
               <div class="filter-option-title">Skirts</div>
             </button>
             <button class="filter-option" data-filter="jeans">
-              <div class="filter-option-icon">👖</div>
               <div class="filter-option-title">Jeans</div>
             </button>
             <button class="filter-option" data-filter="leggings">
-              <div class="filter-option-icon">🧦</div>
               <div class="filter-option-title">Leggings</div>
             </button>
             <button class="filter-option" data-filter="pants">
-              <div class="filter-option-icon">👔</div>
               <div class="filter-option-title">Pants</div>
             </button>
           </div>
@@ -641,24 +1720,23 @@
           <h3>Shoes</h3>
           <div class="filter-options" id="shoes-options">
             <button class="filter-option" data-filter="basketball">
-              <div class="filter-option-icon">🏀</div>
               <div class="filter-option-title">Basketball</div>
             </button>
             <button class="filter-option" data-filter="tennis">
-              <div class="filter-option-icon">🎾</div>
               <div class="filter-option-title">Tennis</div>
             </button>
             <button class="filter-option" data-filter="dress">
-              <div class="filter-option-icon">👠</div>
               <div class="filter-option-title">Dress</div>
             </button>
             <button class="filter-option" data-filter="dunks">
-              <div class="filter-option-icon">👟</div>
               <div class="filter-option-title">Dunks</div>
             </button>
           </div>
         </div>
-        <button id="apply-filters-button">Apply Filters</button>
+      </div>
+      <div id="filter-footer">
+        <button id="reset-filters-button">Reset</button>
+        <button id="apply-filters-button">Apply</button>
       </div>
     </div>
   </div>
@@ -678,57 +1756,57 @@
     // Assets manifest - inline dictionary (no separate file needed)
     const manifest = {
       shirts: [
-        "shirt1.glb",
-        "shirt2.glb",
-        "shirt4.glb",
-        "shirt5.glb",
-        "jacket.glb",
-        "jacket2.glb",
-        "jacket5.glb",
-        "jacket6.glb",
-        "jacket9.glb"
+        "UNIQLO_Sweater.glb",
+        "UNIQLO_Airism_Button_Down.glb",
+        "Graphic_UNIQLO_Tee.glb",
+        "White_Tee.glb",
+        "Ski_Jacket.glb",
+        "Womens_Puffer.glb",
+        "Womens_Fleece_Jacket.glb",
+        "Puffy_Down_Jacket.glb",
+        "Womens_Full_Zip.glb"
       ],
       pants: [
-        "WDressPants1.glb",
-        "pant1.glb",
-        "pant2.glb",
-        "pant3.glb",
-        "pant4.glb",
-        "WDressPants2.glb",
-        "WLeggings1.glb",
-        "WLeggings2.glb",
-        "MDressPants1.glb",
-        "MDressPants2.glb",
-        "wjeans1.glb",
-        "wjeans2.glb",
-        "wjeans3.glb",
-        "mjeans1.glb",
-        "mjeans2.glb",
-        "mjeans3.glb"
+        "Womens_Linen_Dress_Pants.glb",
+        "Linen_Pants.glb",
+        "Cargo_Pants.glb",
+        "UNIQLO_Dress_Fit_Pants.glb",
+        "Active_Wear_Linen_Pants.glb",
+        "Womens_Suit_Pants.glb",
+        "Fabletics_Leggings.glb",
+        "Lululemon_Leggings.glb",
+        "Mens_Modern-Fit_Resolution_Pants.glb",
+        "Heather_Slim_Fit_Dress_Pant.glb",
+        "Flared_Jeans.glb",
+        "Flared_Slim_Fit_Jeans.glb",
+        "Womens_Slim_Fit_Jeans.glb",
+        "AE_AirFlex+_Slim_Straight_Jean.glb",
+        "Straight_Jeans.glb",
+        "Mens_Loose_Jeans.glb"
       ],
       shoes: [
-        "dunks.glb",
-        "dunks2.glb",
-        "dressmensShoes.glb",
-        "dresswomensshoes.glb",
-        "dresswomensshoes2.glb",
-        "WTennisShoes1.glb",
-        "MBasketBallShoes1.glb",
-        "MTennisShoes1.glb",
+        "Nike_Dunks_Tan.glb",
+        "High_Top_Dunks.glb",
+        "Leather_Oxford_Shoes.glb",
+        "Black_Stilleto_Heels.glb",
+        "Hoop_Heels.glb",
+        "Adidas_Barricades.glb",
+        "Adidas_Basketball_Shoes.glb",
+        "Adidas_Furies.glb",
 
       ],
       dresses: [
-        "wdress1.glb",
-        "wdress2.glb",
-        "wdress3.glb"
+        "Boat-Neck_Tie-Gather_Maxi_Dress.glb",
+        "Black_Strapless_dress.glb",
+        "Ruffled_Scoopneck_Mini_Dress.glb"
       ],
       shorts: [
-        "MShorts1.glb",
-        "MShorts2.glb",
-        "WShorts1.glb",
-        "WShorts2.glb",
-        "WSkirt1.glb",
-        "WSkirt2.glb"
+        "Mens_Shorts.glb",
+        "Cargo_Shorts.glb",
+        "Womens_Jean_Shorts.glb",
+        "Cotton_Shorts_Women.glb",
+        "Skirt.glb",
+        "Pencil_Skirt.glb"
       ]
     };
     const BASE = new URL(".", window.location.href); // e.g. https://shrishchou.github.io/YC_Fashion/
@@ -773,17 +1851,24 @@
     console.log("Loaded assets from manifest:", assets);
 
     const verticalOffsets = {
-      shoes: 1.2,      // raised up more
-      pants: 2.4,      // noticeably above shoes (includes shorts)
-      shirts: 4.5,     // noticeably above pants
-      dresses: 2.8,    // lower position (was 3.45)
+      shoes: 0,      // lowered to fix off-screen positioning
+      pants: 1.2,      // noticeably above shoes (includes shorts)
+      shirts: 3.3,     // noticeably above pants
+      dresses: 1.5,    // lowered position
     };
 
     const zOffsets = {
-      shoes: 0.12,      // raised up more
+      shoes: 0.1,      // moved backward (away from camera)
       pants: 0,        // noticeably above shoes (includes shorts)
       shirts: 0,       // noticeably above pants
       dresses: 0,      // same z as other items
+    };
+
+    const xOffsets = {
+      shoes: 0.05,      // moved to the right
+      pants: 0,
+      shirts: 0,
+      dresses: 0,
     };
 
     // Mobile detection (needed for positioning)
@@ -800,9 +1885,9 @@
     const leftCenterY = -0.5; // initial Y position (lower when on the left)
     const targetCenterY = 0; // final Y position (normal center height)
     
-    // Set initial position based on device type
-    const initialX = isMobile ? leftCenterX : rightCenterX;
-    const initialY = isMobile ? leftCenterY : rightCenterY;
+    // Set initial position - always start in center (no side positioning)
+    const initialX = targetCenterX;
+    const initialY = targetCenterY;
 
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0x090b12, 12, 30);
@@ -818,7 +1903,7 @@
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     const camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 7.5, 14);
+    camera.position.set(0, 7.0, 14);
     scene.add(camera);
 
     const pmrem = new THREE.PMREMGenerator(renderer);
@@ -826,15 +1911,37 @@
 
     const controls = new OrbitControls(camera, renderer.domElement);
     // Keep camera looking at center initially, items will be on the right
-    controls.target.set(0, 3.4, 0);
+    controls.target.set(0, 3.0, 0);
     controls.enableDamping = true;
     controls.minDistance = 4;
     controls.maxDistance = 14;
+    controls.enablePan = false; // Disable panning to prevent target drift
+    
+    // Feature 8: Stop auto-rotate during interaction, resume after 3 seconds idle
+    controls.addEventListener('start', function() {
+      rotationController.pause();
+    });
+    
+    controls.addEventListener('change', function() {
+      rotationController.pause();
+      rotationController.resumeAfterIdle();
+    });
+    
+    controls.addEventListener('end', function() {
+      rotationController.resumeAfterIdle();
+    });
     controls.maxPolarAngle = Math.PI * 0.55;
     
-    // Store initial camera and controls state for back animation
-    const initialCameraPosition = new THREE.Vector3(0, 7.5, 14);
-    const initialControlsTarget = new THREE.Vector3(0, 3.4, 0);
+    // Store initial camera and controls state for resetting per experience
+    const initialCameraPosition = new THREE.Vector3(0, 7.0, 14);
+    const initialControlsTarget = new THREE.Vector3(0, 3.0, 0);
+    
+    // Function to reset camera and controls to initial state
+    function resetCameraAndControls() {
+      camera.position.copy(initialCameraPosition);
+      controls.target.copy(initialControlsTarget);
+      controls.update();
+    }
 
     const hemiLight = new THREE.HemisphereLight(0x8fb2ff, 0x0b0d14, 0.75);
     hemiLight.position.set(0, 6, 0);
@@ -855,10 +1962,15 @@
     const current = { shirts: 0, pants: 0, shoes: 0, dresses: 0 };
     
     // Mode state: 'casual' (shirts+pants), 'dresses', or 'styles'
-    let currentMode = 'casual';
+    // Experience state - single source of truth
+    // States: "home", "looks", "build", "dresses"
+    let currentExperience = 'home';
     
-    // Navigation state tracking
-    let navigationState = 'welcome'; // 'welcome', 'browse', 'specific-menu', 'style', 'clothing-items', 'clothing-items-filter'
+    // Build mode tab state
+    let currentBuildTab = 'shirts'; // 'shirts', 'pants', 'shoes'
+    
+    // Currently selected clothing type for product card display
+    let currentSelectedClothing = 'shirts'; // 'shirts', 'pants', 'shoes'
     
     // Filter state
     let selectedFilters = {
@@ -874,16 +1986,54 @@
       shoes: []
     };
     
-    // Pre-defined style combinations (5 styles with random pairs)
+    // Style metadata with name, description, and pricing
+    const styleMetadata = [
+      {
+        name: "Essential Classic",
+        description: "Timeless pieces that form the foundation of any wardrobe",
+        totalPrice: 387,
+        itemPrices: { shirt: 129, pant: 159, shoe: 99 }
+      },
+      {
+        name: "City Minimal",
+        description: "Clean lines and sophisticated neutrals for urban elegance",
+        totalPrice: 395,
+        itemPrices: { shirt: 145, pant: 151, shoe: 99 }
+      },
+      {
+        name: "Weekend Casual",
+        description: "Relaxed comfort meets effortless style",
+        totalPrice: 357,
+        itemPrices: { shirt: 129, pant: 129, shoe: 99 }
+      },
+      {
+        name: "Evening Edge",
+        description: "Bold statement pieces for night-time sophistication",
+        totalPrice: 423,
+        itemPrices: { shirt: 169, pant: 155, shoe: 99 }
+      },
+      {
+        name: "Desert Wanderer",
+        description: "Earth tones and textured fabrics for modern exploration",
+        totalPrice: 408,
+        itemPrices: { shirt: 149, pant: 160, shoe: 99 }
+      },
+      {
+        name: "Coastal Breeze",
+        description: "Lightweight layers perfect for seaside escapes",
+        totalPrice: 374,
+        itemPrices: { shirt: 129, pant: 146, shoe: 99 }
+      }
+    ];
+    
+    // Pre-defined style combinations (matches metadata array length)
     const styleCombinations = [
       { shirt: 0, pant: 0, shoe: 0 },
-      { shirt: 6, pant: 12, shoe: 0 },  // Style 1: Random mix
-      { shirt: 1, pant: 8, shoe: 0 }, // Style 2: Random mix
-      { shirt: 4, pant: 2, shoe: 1 }, // Style 3: Random mix
-       // Style 4: Random mix
+      { shirt: 6, pant: 12, shoe: 0 },
+      { shirt: 1, pant: 8, shoe: 0 },
+      { shirt: 4, pant: 2, shoe: 1 },
       { shirt: 2, pant: 1, shoe: 0 },
       { shirt: 0, pant: 2, shoe: 5 } 
-      
     ];
     let currentStyleIndex = 0;
     
@@ -917,15 +2067,8 @@
           carouselSlots[type].current,
           carouselSlots[type].next
         );
-        // Position the pivot point behind the center item
-        // The pivot is at the carouselGroup origin
-        // We want: center item at world z ≈ 0, pivot at world z = -CAROUSEL_PIVOT_BACK (behind center)
-        // Center item is positioned at (0, 0, CAROUSEL_RADIUS) relative to pivot
-        // So: group.position.z = -CAROUSEL_PIVOT_BACK
-        // Then center at world z = -CAROUSEL_PIVOT_BACK + CAROUSEL_RADIUS
-        // For center at z = 0: CAROUSEL_RADIUS = CAROUSEL_PIVOT_BACK
-        // But we use CAROUSEL_RADIUS for spacing, so ensure they match for proper centering
-        carouselGroups[type].position.z = -CAROUSEL_PIVOT_BACK;
+        // Position items at origin (no carousel offset)
+        carouselGroups[type].position.z = 0;
       });
     
     // Legacy groups for backward compatibility with welcome animation
@@ -945,14 +2088,45 @@
     clothingGroup.position.x = initialX;
     clothingGroup.position.y = initialY;
     
-    // Rotation state - start from 0, continuously rotating at the right position
-    let rotationSpeed = 0.005; // radians per frame
-    let currentRotation = 0;
-    let isRotating = true;
-    clothingGroup.rotation.y = 0; // Start at rotation 0 (starting position)
-    
-    // Normalize rotation to prevent accumulation beyond one rotation
-    const MAX_ROTATION = Math.PI * 2; // one full rotation
+    // Rotation Controller - single source of truth for rotation
+    const rotationController = {
+      enabled: true,
+      speed: 0.005, // radians per frame
+      globalAngle: 0, // Single shared angle for all items
+      idleTimer: null,
+      idleDelay: 3000, // 3 seconds
+      // Get current rotation angle (shared across all items)
+      getAngle: function() {
+        return this.globalAngle;
+      },
+      // Update rotation angle (shared across all items)
+      setAngle: function(angle) {
+        this.globalAngle = angle;
+      },
+      // Increment rotation angle (called in animate loop)
+      increment: function() {
+        if (this.enabled) {
+          this.globalAngle += this.speed;
+        }
+      },
+      // Stop auto-rotation and start idle timer
+      pause: function() {
+        this.enabled = false;
+        if (this.idleTimer) {
+          clearTimeout(this.idleTimer);
+        }
+      },
+      // Resume auto-rotation after idle delay
+      resumeAfterIdle: function() {
+        const self = this;
+        if (this.idleTimer) {
+          clearTimeout(this.idleTimer);
+        }
+        this.idleTimer = setTimeout(function() {
+          self.enabled = true;
+        }, this.idleDelay);
+      }
+    };
 
     // Toast notifications removed - no longer showing
     function showToast(message) {
@@ -1004,6 +2178,8 @@
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
 
+      // Reset position to origin first, then center the model
+      object.position.set(0, 0, 0);
       object.position.sub(center); // center model at origin
 
       // Shoes no longer need separation - keep as single model
@@ -1056,43 +2232,51 @@
         object.scale.setScalar(s);
       }
       
-      // Apply carousel slot positioning
-      // Items are positioned on a circle around a pivot point
-      // Their rotation naturally follows their position on the circle
-      // When the carousel rotates, items smoothly move around the circle
-      if (slot === 'prev') {
-        // Left-back position on the carousel circle
-        const angle = -CAROUSEL_ANGLE;
-        // Position on circle relative to pivot point (carousel group origin)
-        object.position.x = CAROUSEL_RADIUS * Math.sin(angle);
-        object.position.z = CAROUSEL_RADIUS * Math.cos(angle);
-        // Rotation matches the angle on the circle - naturally oriented based on position
-        object.rotation.y = angle;
-        object.scale.multiplyScalar(CAROUSEL_SCALE_SIDE);
-      } else if (slot === 'next') {
-        // Right-back position on the carousel circle
-        const angle = CAROUSEL_ANGLE;
-        object.position.x = CAROUSEL_RADIUS * Math.sin(angle);
-        object.position.z = CAROUSEL_RADIUS * Math.cos(angle);
-        // Rotation matches the angle on the circle - naturally oriented based on position
-        object.rotation.y = angle;
-        object.scale.multiplyScalar(CAROUSEL_SCALE_SIDE);
-      } else if (slot === 'current') {
-        // Current item is at the center of the carousel (angle 0)
-        object.position.x = 0;
-        // Preserve any z adjustments that were made (e.g., for shoes)
-        // Add CAROUSEL_RADIUS to the current z position instead of overwriting it
-        const currentZ = object.position.z;
-        object.position.z = CAROUSEL_RADIUS + currentZ;
-        // At center, facing forward
-        object.rotation.y = 0;
-      }
+      // Position items in place (no carousel movement)
+      // Apply x offset (e.g., shoes offset to the right)
+      object.position.x = (xOffsets[type] !== undefined) ? xOffsets[type] : 0;
+      // Keep z position as is (with any adjustments from above)
+      // Rotation is set in loadModelToSlot to ensure all items use the same global angle
     }
 
+    // Status pill management
+    function showStatusPill(message, showRetry = false, retryCallback = null) {
+      const statusPill = document.getElementById('status-pill');
+      const statusText = statusPill?.querySelector('.status-text');
+      const statusRetry = statusPill?.querySelector('.status-retry');
+      
+      if (!statusPill || !statusText) return;
+      
+      statusText.textContent = message;
+      statusPill.classList.remove('hidden');
+      
+      if (statusRetry) {
+        if (showRetry && retryCallback) {
+          statusRetry.classList.remove('hidden');
+          statusRetry.onclick = () => {
+            statusRetry.classList.add('hidden');
+            retryCallback();
+          };
+        } else {
+          statusRetry.classList.add('hidden');
+        }
+      }
+    }
+    
+    function hideStatusPill() {
+      const statusPill = document.getElementById('status-pill');
+      if (statusPill) {
+        statusPill.classList.add('hidden');
+      }
+    }
+    
     function loadModelToSlot(type, index, slot) {
       const total = assets[type].length;
       const normalizedIndex = (index + total) % total;
       const url = assets[type][normalizedIndex];
+      
+      // Show loading state
+      showStatusPill('Loading...');
       
       return new Promise((resolve, reject) => {
       loader.load(
@@ -1102,11 +2286,23 @@
           gltf.scene.traverse((child) => { child.castShadow = true; });
             centerAndPlace(gltf.scene, type, slot, url, normalizedIndex);
             carouselSlots[type][slot].add(gltf.scene);
+            
+            // Store model reference for rotation control (only for current slot)
+            if (slot === 'current') {
+              currentModels[type] = gltf.scene;
+              // Apply current global angle to ensure all items stay aligned
+              gltf.scene.rotation.y = rotationController.getAngle();
+            }
+            
+            hideStatusPill();
             resolve(gltf.scene);
         },
         undefined,
         (err) => {
           console.error(`Failed to load ${url}`, err);
+            showStatusPill('Failed to load item', true, () => {
+              loadModelToSlot(type, index, slot).then(resolve).catch(reject);
+            });
             reject(err);
           }
         );
@@ -1124,8 +2320,6 @@
         // Always hide prev/next items - only show current
         carouselSlots[type].prev.visible = false;
         carouselSlots[type].next.visible = false;
-        // Update rotations after loading
-        updateItemRotations(type, carouselRotationState[type] || 0);
         // Toast removed
       }).catch((err) => {
           console.error("Failed to load asset. Check console.");
@@ -1227,107 +2421,397 @@
       loadStyleCombination(currentStyleIndex).catch(err => {
         console.error('Error loading style combination:', err);
       });
+      
+      // Update style card
+      updateStyleCard(currentStyleIndex);
     }
     
-    // Update arrow controls and mode button visibility based on current mode
-    function updateModeUI() {
+    // Update style card with current style metadata
+    function updateStyleCard(styleIndex) {
+      const styleCard = document.getElementById('style-card');
+      const styleName = document.getElementById('style-name');
+      const styleDescription = document.getElementById('style-description');
+      const styleTotalPrice = document.getElementById('style-total-price');
+      
+      if (!styleCard || !styleName || !styleDescription || !styleTotalPrice) return;
+      
+      const metadata = styleMetadata[styleIndex];
+      if (!metadata) return;
+      
+      // Update card content
+      styleName.textContent = metadata.name;
+      styleDescription.textContent = metadata.description;
+      styleTotalPrice.textContent = `$${metadata.totalPrice}`;
+    }
+    
+    // Update dresses card (similar to product cards)
+    function updateDressesCard() {
+      updateProductCard('dresses');
+    }
+    
+    // applyState() - Single function that applies experience state to all UI layers
+    // This is the single source of truth for UI visibility
+    function applyState() {
+      // Get all UI elements (three layers)
+      // Layer A: Overlays
+      const introOverlay = document.getElementById('intro-overlay');
+      const filterOverlay = document.getElementById('filter-overlay');
+      const demoModal = document.getElementById('demo-modal');
+      
+      // Layer B: Controls
+      const primaryCarouselControl = document.getElementById('primary-carousel-control');
+      const buildModeTabs = document.getElementById('build-mode-tabs');
       const shirtsControls = document.querySelector('.arrow-controls.shirts');
       const pantsControls = document.querySelector('.arrow-controls.pants');
+      const shoesControls = document.querySelector('.arrow-controls.shoes');
       const dressesControls = document.querySelector('.arrow-controls.dresses');
       const stylesControls = document.querySelector('.arrow-controls.styles');
-      const modeButton = document.getElementById('mode-button');
-      const backButton = document.getElementById('back-button');
       
-      if (!shirtsControls || !pantsControls || !dressesControls || !modeButton || !backButton) return;
+      // Layer C: Cards
+      const productCardsContainer = document.getElementById('product-cards-container');
+      const styleCard = document.getElementById('style-card');
+      const productCardsBackdrop = document.getElementById('product-cards-backdrop');
+      const productCardsToggle = document.getElementById('product-cards-toggle');
+      const dressesCardContainer = document.getElementById('dresses-card-container');
       
-      // Show back button for all modes except initial welcome screen
-      // This includes: browse, specific-menu, style, clothing-items
-      if (navigationState === 'welcome') {
-        // Initial welcome screen - hide back button
-        backButton.classList.remove('visible');
-      } else {
-        // All other screens - show back button
-        backButton.classList.add('visible');
-      }
+      // Hide everything by default
+      // Layer A: Overlays
+      if (introOverlay) introOverlay.classList.add('hidden');
+      if (filterOverlay) filterOverlay.classList.remove('visible');
+      if (demoModal) demoModal.classList.remove('visible');
       
-      if (currentMode === 'styles') {
-        // Hide all individual controls (shirts, pants, shoes, dresses)
-        shirtsControls.style.display = 'none';
-        shirtsControls.classList.remove('visible');
+      // Layer B: Controls
+      if (primaryCarouselControl) primaryCarouselControl.classList.remove('visible');
+      if (buildModeTabs) buildModeTabs.classList.remove('visible');
+      if (shirtsControls) shirtsControls.classList.remove('visible');
+      if (pantsControls) pantsControls.classList.remove('visible');
+      if (shoesControls) shoesControls.classList.remove('visible');
+      if (dressesControls) dressesControls.classList.remove('visible');
+      if (stylesControls) stylesControls.classList.remove('visible');
+      
+      // Layer C: Cards
+      if (productCardsContainer) productCardsContainer.classList.remove('visible');
+      if (styleCard) styleCard.classList.remove('visible');
+      if (dressesCardContainer) dressesCardContainer.classList.remove('visible');
+      if (productCardsBackdrop) productCardsBackdrop.classList.remove('visible');
+      if (productCardsToggle) productCardsToggle.classList.remove('active');
+      
+      // Apply state based on currentExperience (single source of truth)
+      if (currentExperience === 'home') {
+        // Layer A: Show intro overlay
+        if (introOverlay) introOverlay.classList.remove('hidden');
         
-        pantsControls.style.display = 'none';
-        pantsControls.classList.remove('visible');
-        // Restore pants controls data-type in case it was changed
-        const pantsLeftBtn = pantsControls.querySelector('.arrow-btn.left');
-        const pantsRightBtn = pantsControls.querySelector('.arrow-btn.right');
-        if (pantsLeftBtn) pantsLeftBtn.setAttribute('data-type', 'pants');
-        if (pantsRightBtn) pantsRightBtn.setAttribute('data-type', 'pants');
+        // Layer B: Hide all controls
+        // (already hidden above)
         
-        const shoesControls = document.querySelector('.arrow-controls.shoes');
-        if (shoesControls) {
-          shoesControls.style.display = 'none';
-          shoesControls.classList.remove('visible');
-        }
+        // Layer C: Hide all cards
+        // (already hidden above)
         
-        dressesControls.style.display = 'none';
-        dressesControls.classList.remove('visible');
+      } else if (currentExperience === 'looks') {
+        // Layer A: Hide overlays
+        // (already hidden above)
         
-        // Show only the styles controls (middle arrow)
+        // Layer B: Show styles arrow controls (positioned at middle like pants)
         if (stylesControls) {
-          stylesControls.style.display = 'flex';
           stylesControls.classList.add('visible', 'show-after-click');
         }
         
-        modeButton.style.display = 'none';
-      } else if (currentMode === 'casual') {
-        // Show shirts, pants, and shoes controls, hide dresses and styles
-        shirtsControls.style.display = 'flex';
-        shirtsControls.classList.add('visible');
-        pantsControls.style.display = 'flex';
-        pantsControls.classList.add('visible');
-        // Restore pants controls data-type for casual mode
-        const pantsLeftBtn = pantsControls.querySelector('.arrow-btn.left');
-        const pantsRightBtn = pantsControls.querySelector('.arrow-btn.right');
-        if (pantsLeftBtn) pantsLeftBtn.setAttribute('data-type', 'pants');
-        if (pantsRightBtn) pantsRightBtn.setAttribute('data-type', 'pants');
+        // Layer C: Show style card (desktop) or toggle button (mobile)
+        if (styleCard) {
+          // On desktop, show card. On mobile, card is hidden by default, toggle button shows
+          if (window.innerWidth > 768) {
+            styleCard.classList.add('visible');
+          } else {
+            styleCard.classList.remove('visible');
+          }
+          updateStyleCard(currentStyleIndex);
+        }
+        const productCardsToggle = document.getElementById('product-cards-toggle');
+        const isMobile = window.innerWidth <= 768;
+        const isIPadPortrait = window.innerWidth >= 769 && window.innerWidth <= 1024 && window.innerHeight > window.innerWidth;
+        if (productCardsToggle) {
+          productCardsToggle.style.display = (isMobile || isIPadPortrait) ? 'flex' : 'none';
+        }
         
-        const shoesControls = document.querySelector('.arrow-controls.shoes');
+      } else if (currentExperience === 'build') {
+        // Layer A: Hide overlays
+        // (already hidden above)
+        
+        // Layer B: Show individual arrow controls for each clothing type
+        // Add show-after-click class for desktop visibility
+        if (shirtsControls) {
+          shirtsControls.classList.add('visible', 'show-after-click');
+        }
+        if (pantsControls) {
+          pantsControls.classList.add('visible', 'show-after-click');
+        }
         if (shoesControls) {
-          shoesControls.style.display = 'flex';
-          shoesControls.classList.add('visible');
-        }
-        dressesControls.style.display = 'none';
-        dressesControls.classList.remove('visible');
-        if (stylesControls) {
-          stylesControls.style.display = 'none';
-          stylesControls.classList.remove('visible');
-        }
-        modeButton.textContent = 'Dresses';
-        modeButton.style.display = 'block';
-      } else if (currentMode === 'dresses') {
-        // Hide shirts and pants controls, show dresses with single arrow pair
-        shirtsControls.style.display = 'none';
-        shirtsControls.classList.remove('visible');
-        pantsControls.style.display = 'none';
-        pantsControls.classList.remove('visible');
-        dressesControls.style.display = 'flex';
-        dressesControls.classList.add('visible');
-        if (stylesControls) {
-          stylesControls.style.display = 'none';
-          stylesControls.classList.remove('visible');
+          shoesControls.classList.add('visible', 'show-after-click');
         }
         
-        // Show both arrows for dresses (prev/next)
-        const leftBtn = dressesControls.querySelector('.arrow-btn.left');
-        const rightBtn = dressesControls.querySelector('.arrow-btn.right');
-        if (leftBtn && rightBtn) {
-          leftBtn.style.display = 'flex';
-          rightBtn.style.display = 'flex';
+        // Layer C: Show product cards (desktop) or toggle button (mobile)
+        if (productCardsContainer) {
+          // On desktop, show cards. On mobile, cards are hidden by default, toggle button shows
+          if (window.innerWidth > 768) {
+            productCardsContainer.classList.add('visible');
+          } else {
+            productCardsContainer.classList.remove('visible');
+          }
+          updateAllProductCards();
+        }
+        const productCardsToggle = document.getElementById('product-cards-toggle');
+        const isMobile = window.innerWidth <= 768;
+        const isIPadPortrait = window.innerWidth >= 769 && window.innerWidth <= 1024 && window.innerHeight > window.innerWidth;
+        
+        if (productCardsToggle) {
+          productCardsToggle.style.display = (isMobile || isIPadPortrait) ? 'flex' : 'none';
+        }
+        if (productCardsBackdrop) {
+          productCardsBackdrop.classList.remove('visible');
+        }
+        if (productCardsToggle) {
+          productCardsToggle.classList.remove('active');
         }
         
-        modeButton.textContent = 'Casual';
-        modeButton.style.display = 'block';
+      } else if (currentExperience === 'dresses') {
+        // Layer A: Hide overlays
+        // (already hidden above)
+        
+        // Layer B: Show dresses and shoes arrow controls
+        if (dressesControls) {
+          dressesControls.classList.add('visible', 'show-after-click');
+        }
+        if (shoesControls) {
+          shoesControls.classList.add('visible', 'show-after-click');
+        }
+        
+        // Layer C: Show dresses and shoes cards (desktop) or toggle button (mobile)
+        if (dressesCardContainer) {
+          // On desktop, show card. On mobile, card is hidden by default, toggle button shows
+          if (window.innerWidth > 768) {
+            dressesCardContainer.classList.add('visible');
+          } else {
+            dressesCardContainer.classList.remove('visible');
+          }
+          updateProductCardInDressesWindow('dresses');
+          updateProductCardInDressesWindow('shoes');
+        }
+        const productCardsToggle = document.getElementById('product-cards-toggle');
+        const isMobile = window.innerWidth <= 768;
+        const isIPadPortrait = window.innerWidth >= 769 && window.innerWidth <= 1024 && window.innerHeight > window.innerWidth;
+        if (productCardsToggle) {
+          productCardsToggle.style.display = (isMobile || isIPadPortrait) ? 'flex' : 'none';
+        }
       }
+    }
+    
+    // Legacy function name for compatibility (redirects to applyState)
+    function updateModeUI() {
+      applyState();
+    }
+    
+    // Update all product cards (for Collections/Build mode)
+    function updateAllProductCards() {
+      ['shirts', 'pants', 'shoes'].forEach(type => {
+        updateProductCard(type);
+      });
+    }
+    
+    // Format file name to display name (handle underscores and special cases)
+    function formatDisplayName(filename) {
+      if (!filename) return '';
+      
+      // Remove .glb extension
+      let name = filename.replace('.glb', '');
+      
+      // Replace underscores with spaces, but preserve brand names like UNIQLO
+      // Handle special cases: UNIQLO, Nike, Adidas, etc.
+      name = name.replace(/_/g, ' ');
+      
+      // Normalize spacing around special characters
+      name = name.replace(/\s+/g, ' ').trim();
+      
+      // Handle special brand formatting (keep UNIQLO, Nike, Adidas as single words)
+      name = name.replace(/\bUNIQLO\b/gi, 'UNIQLO');
+      name = name.replace(/\bNike\b/gi, 'Nike');
+      name = name.replace(/\bAdidas\b/gi, 'Adidas');
+      name = name.replace(/\bLululemon\b/gi, 'Lululemon');
+      name = name.replace(/\bFabletics\b/gi, 'Fabletics');
+      name = name.replace(/\bAE\b/gi, 'AE');
+      
+      return name;
+    }
+    
+    // Generate realistic price based on item name and type
+    function generatePrice(filename, type) {
+      const name = filename.toLowerCase();
+      
+      // Base prices by type
+      const basePrices = {
+        shirts: 45,
+        pants: 65,
+        shoes: 85,
+        dresses: 120
+      };
+      
+      let price = basePrices[type] || 50;
+      
+      // Adjust based on item characteristics
+      // Premium brands
+      if (name.includes('lululemon')) price += 45;
+      if (name.includes('uniqlo')) price += 5;
+      if (name.includes('fabletics')) price += 15;
+      if (name.includes('nike')) price += 25;
+      if (name.includes('adidas')) price += 20;
+      
+      // Item-specific adjustments
+      if (type === 'shirts') {
+        if (name.includes('sweater')) price += 15;
+        if (name.includes('jacket') || name.includes('puffer')) price += 40;
+        if (name.includes('fleece')) price += 20;
+        if (name.includes('tee') || name.includes('teeshirt')) price -= 15;
+      }
+      
+      if (type === 'pants') {
+        if (name.includes('dress') && name.includes('pants')) price += 25;
+        if (name.includes('leggings')) price += 15;
+        if (name.includes('cargo')) price += 10;
+        if (name.includes('jeans')) price += 10;
+        if (name.includes('suit')) price += 35;
+      }
+      
+      if (type === 'shoes') {
+        if (name.includes('oxford') || name.includes('leather')) price += 35;
+        if (name.includes('heels') || name.includes('stilleto')) price += 25;
+        if (name.includes('dunks')) price += 15;
+        if (name.includes('basketball')) price += 20;
+      }
+      
+      if (type === 'dresses') {
+        if (name.includes('maxi')) price += 30;
+        if (name.includes('mini')) price -= 15;
+        if (name.includes('strapless')) price += 20;
+      }
+      
+      // Round to nearest 5
+      price = Math.round(price / 5) * 5;
+      
+      return `$${price}`;
+    }
+    
+    // Generate tags based on item name
+    function generateTags(filename, type) {
+      const name = filename.toLowerCase();
+      const tags = [];
+      
+      // Type-based tags
+      if (type === 'shirts') {
+        if (name.includes('sweater')) tags.push('Sweater');
+        if (name.includes('jacket') || name.includes('puffer') || name.includes('fleece')) tags.push('Outerwear');
+        if (name.includes('tee') || name.includes('teeshirt')) tags.push('Casual');
+        if (name.includes('button') || name.includes('dress')) tags.push('Formal');
+      }
+      
+      if (type === 'pants') {
+        if (name.includes('dress')) tags.push('Dress');
+        if (name.includes('jeans')) tags.push('Denim');
+        if (name.includes('leggings')) tags.push('Active');
+        if (name.includes('cargo')) tags.push('Casual');
+        if (name.includes('suit')) tags.push('Formal');
+      }
+      
+      if (type === 'shoes') {
+        if (name.includes('oxford') || name.includes('leather')) tags.push('Dress');
+        if (name.includes('heels')) tags.push('Heels');
+        if (name.includes('dunks') || name.includes('basketball')) tags.push('Sneakers');
+      }
+      
+      if (type === 'dresses') {
+        if (name.includes('maxi')) tags.push('Maxi');
+        if (name.includes('mini')) tags.push('Mini');
+        if (name.includes('strapless')) tags.push('Strapless');
+        if (name.includes('ruffled')) tags.push('Ruffled');
+      }
+      
+      // Brand tags
+      if (name.includes('uniqlo')) tags.push('UNIQLO');
+      if (name.includes('nike')) tags.push('Nike');
+      if (name.includes('adidas')) tags.push('Adidas');
+      if (name.includes('lululemon')) tags.push('Lululemon');
+      if (name.includes('fabletics')) tags.push('Fabletics');
+      
+      return tags.slice(0, 3); // Limit to 3 tags
+    }
+    
+    // Update a single product card with current item info
+    function updateProductCard(type) {
+      const card = document.getElementById(`product-card-${type}`);
+      const nameEl = document.getElementById(`product-name-${type}`);
+      const tagsEl = document.getElementById(`product-tags-${type}`);
+      const priceEl = document.getElementById(`product-price-${type}`);
+
+      if (!card || !nameEl || !tagsEl || !priceEl) return;
+
+      // Get current item info
+      const currentIndex = current[type] || 0;
+      const url = assets[type] && assets[type][currentIndex] ? assets[type][currentIndex] : '';
+      const filename = url ? url.split('/').pop() : '';
+
+      // Format display name
+      const itemName = formatDisplayName(filename);
+
+      // Generate price and tags
+      const price = generatePrice(filename, type);
+      const tags = generateTags(filename, type);
+
+      // Update card
+      nameEl.textContent = itemName;
+      priceEl.textContent = price;
+
+      // Update tags
+      tagsEl.innerHTML = '';
+      tags.forEach(tag => {
+        const tagEl = document.createElement('span');
+        tagEl.className = 'product-tag';
+        tagEl.textContent = tag;
+        tagsEl.appendChild(tagEl);
+      });
+    }
+
+    // Helper function to update product card in dresses window (handles special IDs)
+    function updateProductCardInDressesWindow(type) {
+      const suffix = type === 'shoes' ? '-dresses' : '';
+      const card = document.getElementById(`product-card-${type}${suffix}`);
+      const nameEl = document.getElementById(`product-name-${type}${suffix}`);
+      const tagsEl = document.getElementById(`product-tags-${type}${suffix}`);
+      const priceEl = document.getElementById(`product-price-${type}${suffix}`);
+
+      if (!card || !nameEl || !tagsEl || !priceEl) return;
+
+      // Get current item info
+      const currentIndex = current[type] || 0;
+      const url = assets[type] && assets[type][currentIndex] ? assets[type][currentIndex] : '';
+      const filename = url ? url.split('/').pop() : '';
+
+      // Format display name
+      const itemName = formatDisplayName(filename);
+
+      // Generate price and tags
+      const price = generatePrice(filename, type);
+      const tags = generateTags(filename, type);
+
+      // Update card
+      nameEl.textContent = itemName;
+      priceEl.textContent = price;
+
+      // Update tags
+      tagsEl.innerHTML = '';
+      tags.forEach(tag => {
+        const tagEl = document.createElement('span');
+        tagEl.className = 'product-tag';
+        tagEl.textContent = tag;
+        tagsEl.appendChild(tagEl);
+      });
     }
 
     function switchItem(type, dir) {
@@ -1346,11 +2830,17 @@
       // Simply load the new item directly - no animation
       carouselAnimationState[type] = true;
       loadAllCarouselItems(type).then(() => {
-        // Reset rotation state
-        carouselRotationState[type] = 0;
-        carouselGroups[type].rotation.y = 0;
-        updateItemRotations(type, 0);
+        // Rotation persists (handled by rotationController)
         carouselAnimationState[type] = false;
+        
+        // Update product cards if in build mode or dresses mode
+        if (currentExperience === 'build') {
+          updateProductCard(type);
+        } else if (currentExperience === 'dresses') {
+          if (type === 'dresses' || type === 'shoes') {
+            updateProductCardInDressesWindow(type);
+          }
+        }
       });
     }
     
@@ -1375,7 +2865,6 @@
           loadAllCarouselItems('dresses').then(() => {
             carouselRotationState['dresses'] = 0;
             carouselGroups['dresses'].rotation.y = 0;
-            updateItemRotations('dresses', 0);
             carouselAnimationState['dresses'] = false;
           }).catch(err => {
             console.error('Error loading dresses:', err);
@@ -1400,7 +2889,6 @@
           loadAllCarouselItems('shirts').then(() => {
             carouselRotationState['shirts'] = 0;
             carouselGroups['shirts'].rotation.y = 0;
-            updateItemRotations('shirts', 0);
             carouselAnimationState['shirts'] = false;
           }).catch(err => {
             console.error('Error loading shirts:', err);
@@ -1412,7 +2900,6 @@
           loadAllCarouselItems('pants').then(() => {
             carouselRotationState['pants'] = 0;
             carouselGroups['pants'].rotation.y = 0;
-            updateItemRotations('pants', 0);
             carouselAnimationState['pants'] = false;
           }).catch(err => {
             console.error('Error loading pants:', err);
@@ -1427,371 +2914,165 @@
       }, 10);
     }
 
-    // Event listeners for arrow buttons
-    document.querySelectorAll(".arrow-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
+    // Arrow button event listeners (works for all clothing types including styles)
+    document.querySelectorAll('.arrow-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
         const type = btn.dataset.type;
-        const dir = Number(btn.dataset.dir);
-        switchItem(type, dir);
+        const dir = parseInt(btn.dataset.dir);
+        
+        if (type === 'styles') {
+          switchStyle(dir);
+        } else {
+          switchItem(type, dir);
+        }
       });
     });
     
-    // Mode button event listener
-    const modeButton = document.getElementById('mode-button');
-    if (modeButton) {
-      modeButton.addEventListener('click', () => {
-        switchMode();
+    // Build mode tabs event listeners
+    document.querySelectorAll('.build-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabType = tab.dataset.tab;
+        switchBuildTab(tabType);
       });
-    }
+    });
     
-    // Unified function to animate model back to right side
-    function animateModelBackToRight(onComplete, skipWelcomeOverlay = false, fasterAnimation = false) {
-      if (isAnimating) return;
+    // Switch build mode tab
+    function switchBuildTab(tabType) {
+      currentBuildTab = tabType;
       
-      isAnimating = true;
+      // Update active tab
+      document.querySelectorAll('.build-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.dataset.tab === tabType) {
+          tab.classList.add('active');
+        }
+      });
       
-      // Make sure all groups are visible before resetting
+      // Show all clothing types (full try-on mode)
       if (groups.shirts) groups.shirts.visible = true;
       if (groups.pants) groups.pants.visible = true;
       if (groups.shoes) groups.shoes.visible = true;
       
-      // Reset clothing items to initial fit (first items)
-      restoreOriginalAssets();
-      ["shirts", "pants", "shoes"].forEach((type) => {
-        if (assets[type] && assets[type].length > 0) {
-          current[type] = 0;
-          loadAllCarouselItems(type, false);
-        }
-      });
-      
-      // Hide all controls immediately
-      document.querySelectorAll('.arrow-controls').forEach(ctrl => {
-        ctrl.style.display = 'none';
-        ctrl.classList.remove('visible');
-      });
-      if (modeButton) {
-        modeButton.style.display = 'none';
-        modeButton.classList.remove('visible');
+      // Update all product cards
+      if (currentExperience === 'build') {
+        updateAllProductCards();
       }
-      
-      // Show welcome overlay only if not skipping (for going back to filter screen)
-      if (!skipWelcomeOverlay) {
-        // Show welcome overlay first (for mobile where it uses display: none)
-        welcomeOverlay.style.display = 'flex';
-        // Force reflow to ensure display change is applied
-        welcomeOverlay.offsetHeight;
-        // Then remove slide-out class to animate back in
-        welcomeOverlay.classList.remove('slide-out');
-      } else {
-        // Hide welcome overlay when going back to filter screen
-        welcomeOverlay.style.display = 'none';
-        welcomeOverlay.classList.add('slide-out');
-      }
-      
-      // Start reverse animation - faster when going back to filter screen
-      const reverseAnimationDuration = fasterAnimation ? animationDuration * 0.5 : animationDuration;
-      animationStartTime = performance.now();
-      
-      // Capture starting position and rotation (current center position)
-      const fromX = clothingGroup.position.x;
-      const fromY = clothingGroup.position.y;
-      const fromRotation = currentRotation % MAX_ROTATION;
-      const normalizedFromRotation = fromRotation < 0 ? fromRotation + MAX_ROTATION : fromRotation;
-      
-      // Capture current camera position and controls target
-      const fromCameraPos = new THREE.Vector3().copy(camera.position);
-      const fromControlsTarget = new THREE.Vector3().copy(controls.target);
-      
-      // Target position and rotation (right side, rotation 0)
-      const toX = isMobile ? leftCenterX : rightCenterX;
-      const toY = isMobile ? leftCenterY : rightCenterY;
-      const toRotation = 0;
-      
-      function animateReverse() {
-        if (!isAnimating) return;
-        
-        const elapsed = performance.now() - animationStartTime;
-        const progress = Math.min(elapsed / reverseAnimationDuration, 1);
-        
-        // Easing function (ease-out-cubic) - smoother easing
-        const easeProgress = 1 - Math.pow(1 - progress, 3);
-        
-        // Smoothly translate from center back to initial position (right side)
-        clothingGroup.position.x = fromX + (toX - fromX) * easeProgress;
-        clothingGroup.position.y = fromY + (toY - fromY) * easeProgress;
-        
-        // Smoothly rotate back to initial rotation (0)
-        currentRotation = normalizedFromRotation + (toRotation - normalizedFromRotation) * easeProgress;
-        clothingGroup.rotation.y = currentRotation;
-        
-        // Smoothly animate camera position back to initial position
-        camera.position.x = fromCameraPos.x + (initialCameraPosition.x - fromCameraPos.x) * easeProgress;
-        camera.position.y = fromCameraPos.y + (initialCameraPosition.y - fromCameraPos.y) * easeProgress;
-        camera.position.z = fromCameraPos.z + (initialCameraPosition.z - fromCameraPos.z) * easeProgress;
-        
-        // Smoothly animate controls target back to initial target
-        controls.target.x = fromControlsTarget.x + (initialControlsTarget.x - fromControlsTarget.x) * easeProgress;
-        controls.target.y = fromControlsTarget.y + (initialControlsTarget.y - fromControlsTarget.y) * easeProgress;
-        controls.target.z = fromControlsTarget.z + (initialControlsTarget.z - fromControlsTarget.z) * easeProgress;
-        controls.update();
-        
-        if (progress < 1) {
-          requestAnimationFrame(animateReverse);
-        } else {
-          // Animation complete - reset to starting position and rotation
-          clothingGroup.position.x = toX;
-          clothingGroup.position.y = toY;
-          clothingGroup.rotation.y = toRotation;
-          currentRotation = toRotation;
-          
-          // Reset camera and controls to initial state
-          camera.position.copy(initialCameraPosition);
-          controls.target.copy(initialControlsTarget);
-          controls.update();
-          
-          isAnimating = false;
-          isRotating = true; // Continue rotation in place after animation
-          
-          // Call completion callback if provided
-          if (onComplete) onComplete();
-        }
-      }
-      
-      requestAnimationFrame(animateReverse);
     }
     
-    // Helper function to setup welcome buttons based on target state
-    function setupWelcomeButtons(targetState) {
-      const welcomeButtons = document.getElementById('welcome-buttons');
-      if (!welcomeButtons) return;
+    // Mode button removed - navigation now handled by top nav
+    
+    // Single source of truth for experience state
+    function setExperience(experience) {
+      currentExperience = experience;
       
-      if (targetState === 'welcome') {
-        // Initial welcome screen - Free Browse and Specific buttons
-        welcomeButtons.innerHTML = `
-          <button class="welcome-button" id="free-browse-button">Free Browse</button>
-          <button class="welcome-button" id="specific-button">Specific</button>
-        `;
-        welcomeButtons.classList.add('two-buttons');
+      // Reset camera and controls to initial state when switching experiences
+      resetCameraAndControls();
+
+      if (experience === 'home') {
+        // Reset to initial state
+        restoreOriginalAssets();
+        currentStyleIndex = 0;
+        currentSelectedClothing = 'shirts';
         
-        const freeBtn = document.getElementById('free-browse-button');
-        const specBtn = document.getElementById('specific-button');
+        // Hide all clothing groups
+        if (groups.shirts) groups.shirts.visible = false;
+        if (groups.pants) groups.pants.visible = false;
+        if (groups.shoes) groups.shoes.visible = false;
+        if (groups.dresses) groups.dresses.visible = false;
         
-        if (freeBtn) {
-          freeBtn.addEventListener('click', () => {
-            randomizeAssets();
-            navigationState = 'browse';
-            currentMode = 'casual';
-            isAnimating = false;
-            startAnimation();
-          });
-        }
+        // Reset position to center
+        clothingGroup.position.x = targetCenterX;
+        clothingGroup.position.y = targetCenterY;
+        clothingGroup.rotation.y = 0;
         
-        if (specBtn) {
-          specBtn.addEventListener('click', () => {
-            navigationState = 'specific-menu';
-            setupWelcomeButtons('specific-menu');
-            const backBtn = document.getElementById('back-button');
-            if (backBtn) backBtn.classList.add('visible');
-          });
-        }
-      } else if (targetState === 'specific-menu') {
-        // Specific menu - Style and Clothing Items buttons
-        welcomeButtons.innerHTML = '';
-        welcomeButtons.classList.remove('two-buttons');
-        welcomeButtons.style.gap = '16px';
+      } else if (experience === 'looks') {
+        // Curated outfits (styles mode)
+        restoreOriginalAssets();
+        currentStyleIndex = 0;
         
-        const styleBtn = document.createElement("button");
-        styleBtn.className = "welcome-button";
-        styleBtn.id = "style-button";
-        styleBtn.textContent = "Style";
+        // Show shirts, pants, and shoes for styles
+        if (groups.shirts) groups.shirts.visible = true;
+        if (groups.pants) groups.pants.visible = true;
+        if (groups.shoes) groups.shoes.visible = true;
+        if (groups.dresses) groups.dresses.visible = false;
         
-        const clothingBtn = document.createElement("button");
-        clothingBtn.className = "welcome-button";
-        clothingBtn.id = "clothing-items-button";
-        clothingBtn.textContent = "Clothing Items";
-        
-        welcomeButtons.appendChild(styleBtn);
-        welcomeButtons.appendChild(clothingBtn);
-        
-        styleBtn.addEventListener("click", () => {
-          restoreOriginalAssets();
-          navigationState = 'style';
-          currentMode = 'styles';
-          currentStyleIndex = 0;
-          // Update UI immediately to hide all arrow controls except styles
-          updateModeUI();
-          isAnimating = false;
-          startAnimation();
+        // Load first style combination
+        loadStyleCombination(currentStyleIndex).catch(err => {
+          console.error('Error loading style combination:', err);
         });
         
-        clothingBtn.addEventListener("click", () => {
-          restoreOriginalAssets();
-          // Show filter screen first instead of animating immediately
-          navigationState = 'clothing-items-filter';
-          showFilterOverlay();
-          const backBtn = document.getElementById('back-button');
-          if (backBtn) backBtn.classList.add('visible');
+        // Update style card
+        updateStyleCard(currentStyleIndex);
+        
+      } else if (experience === 'build') {
+        // Collection mode (no filter, just browse items)
+        randomizeAssets();
+        currentBuildTab = 'shirts';
+        currentSelectedClothing = 'shirts';
+        
+        // Show all clothing types (full try-on mode)
+        if (groups.shirts) groups.shirts.visible = true;
+        if (groups.pants) groups.pants.visible = true;
+        if (groups.shoes) groups.shoes.visible = true;
+        if (groups.dresses) groups.dresses.visible = false;
+        
+        // Load all items
+        ["shirts", "pants", "shoes"].forEach((type) => {
+          if (assets[type] && assets[type].length > 0) {
+            current[type] = 0;
+            loadAllCarouselItems(type, false);
+          }
         });
+        
+      } else if (experience === 'dresses') {
+        // Dresses mode
+        // Hide shirts and pants, show dresses and shoes
+        if (groups.shirts) groups.shirts.visible = false;
+        if (groups.pants) groups.pants.visible = false;
+        if (groups.dresses) groups.dresses.visible = true;
+        if (groups.shoes) groups.shoes.visible = true;
+        
+        // Load first dress
+        if (assets.dresses && assets.dresses.length > 0) {
+          current.dresses = 0;
+          carouselAnimationState['dresses'] = true;
+          loadAllCarouselItems('dresses').then(() => {
+            carouselAnimationState['dresses'] = false;
+          }).catch(err => {
+            console.error('Error loading dresses:', err);
+            carouselAnimationState['dresses'] = false;
+          });
+        }
       }
+      
+      // Apply UI state (three layers: Overlays, Controls, Cards)
+      applyState();
     }
     
-    // Reverse animation function (animate avatar back to starting position)
-    function reverseAnimation() {
-      // animateModelBackToRight now handles clothing reset internally
-      animateModelBackToRight(() => {
-        if (backButton) backButton.classList.remove('visible');
-        setupWelcomeButtons('welcome');
+    
+    // Top navigation handlers - use setExperience as single source of truth
+    const navStyles = document.getElementById('nav-styles');
+    const navCollection = document.getElementById('nav-collection');
+    const navDresses = document.getElementById('nav-dresses');
+    
+    if (navStyles) {
+      navStyles.addEventListener('click', (e) => {
+        e.preventDefault();
+        setExperience('looks');
       });
     }
     
+    if (navCollection) {
+      navCollection.addEventListener('click', (e) => {
+        e.preventDefault();
+        setExperience('build');
+      });
+    }
     
-    // Back button handler - navigates back to previous page in hierarchy
-    const backButton = document.getElementById('back-button');
-    if (backButton) {
-      backButton.addEventListener('click', () => {
-        if (navigationState === 'browse') {
-          // Free Browse mode → go back to initial page
-          // If currently in dresses mode, switch back to casual mode first
-          if (currentMode === 'dresses') {
-            // Switch from dresses to casual mode
-            currentMode = 'casual';
-            // Hide dresses
-            if (groups.dresses) groups.dresses.visible = false;
-            // Show shirts and pants
-            if (groups.shirts) groups.shirts.visible = true;
-            if (groups.pants) groups.pants.visible = true;
-            if (groups.shoes) groups.shoes.visible = true;
-            // Update UI to reflect casual mode
-            updateModeUI();
-          }
-          navigationState = 'welcome';
-          currentMode = 'casual';
-          reverseAnimation();
-        } else if (navigationState === 'clothing-items-filter') {
-          // Filter screen → go back to Style/Clothing Items menu (no animation)
-          navigationState = 'specific-menu';
-          // Clear filter selections (both current and last applied)
-          selectedFilters = { tops: [], bottoms: [], shoes: [] };
-          lastAppliedFilters = { tops: [], bottoms: [], shoes: [] };
-          // Restore original assets to clear any applied filters
-          restoreOriginalAssets();
-          // Make sure all groups are visible again (in case they were hidden by filters)
-          if (groups.shirts) groups.shirts.visible = true;
-          if (groups.pants) groups.pants.visible = true;
-          if (groups.shoes) groups.shoes.visible = true;
-          // Hide filter overlay and show welcome overlay with Style/Clothing Items buttons
-          hideFilterOverlay();
-          const welcomeOverlay = document.getElementById('welcome-overlay');
-          if (welcomeOverlay) {
-            welcomeOverlay.style.display = 'flex';
-            welcomeOverlay.classList.remove('slide-out');
-          }
-          setupWelcomeButtons('specific-menu');
-          // Back button stays visible at specific-menu
-        } else if (navigationState === 'style' || navigationState === 'clothing-items') {
-          // Style or Clothing Items mode → go back
-          // If currently in dresses mode, switch back to casual mode first
-          if (currentMode === 'dresses') {
-            // Switch from dresses to casual mode
-            currentMode = 'casual';
-            // Hide dresses
-            if (groups.dresses) groups.dresses.visible = false;
-            // Show shirts and pants
-            if (groups.shirts) groups.shirts.visible = true;
-            if (groups.pants) groups.pants.visible = true;
-            if (groups.shoes) groups.shoes.visible = true;
-            // Update UI to reflect casual mode
-            updateModeUI();
-          }
-          
-          // For clothing-items, go back to filter screen with remembered selections
-          if (navigationState === 'clothing-items') {
-            navigationState = 'clothing-items-filter';
-            // Make sure all groups are visible again before animating back
-            if (groups.shirts) groups.shirts.visible = true;
-            if (groups.pants) groups.pants.visible = true;
-            if (groups.shoes) groups.shoes.visible = true;
-            
-            // On mobile/iPad, show filter immediately without animation
-            if (isMobile || window.innerWidth <= 1024) {
-              // Reset clothing items to initial fit (first items)
-              restoreOriginalAssets();
-              ["shirts", "pants", "shoes"].forEach((type) => {
-                if (assets[type] && assets[type].length > 0) {
-                  current[type] = 0;
-                  loadAllCarouselItems(type, false);
-                }
-              });
-              
-              // Hide all controls
-              document.querySelectorAll('.arrow-controls').forEach(ctrl => {
-                ctrl.style.display = 'none';
-                ctrl.classList.remove('visible');
-              });
-              const modeButton = document.getElementById('mode-button');
-              if (modeButton) {
-                modeButton.style.display = 'none';
-                modeButton.classList.remove('visible');
-              }
-              
-              // Reset model position immediately (no animation on mobile/iPad)
-              clothingGroup.position.x = isMobile ? leftCenterX : rightCenterX;
-              clothingGroup.position.y = isMobile ? leftCenterY : rightCenterY;
-              clothingGroup.rotation.y = 0;
-              currentRotation = 0;
-              camera.position.copy(initialCameraPosition);
-              controls.target.copy(initialControlsTarget);
-              controls.update();
-              
-              // Show filter overlay immediately
-              const filterOverlay = document.getElementById('filter-overlay');
-              const welcomeOverlay = document.getElementById('welcome-overlay');
-              if (filterOverlay) {
-                if (welcomeOverlay) {
-                  welcomeOverlay.style.display = 'none';
-                  welcomeOverlay.classList.add('slide-out');
-                }
-                filterOverlay.classList.add('visible');
-                // Initialize UI first (set up handlers), then restore selections
-                initializeFilterUI(false);
-                restoreFilterSelections();
-              }
-            } else {
-              // On desktop, animate model back to right and reset clothing, then show filter screen
-              // Don't show welcome overlay - go straight to filter screen
-              // Use faster animation for better UX when going back to filters
-              animateModelBackToRight(() => {
-                // Show filter overlay with remembered selections after animation
-                const filterOverlay = document.getElementById('filter-overlay');
-                const welcomeOverlay = document.getElementById('welcome-overlay');
-                if (filterOverlay) {
-                  // Hide welcome overlay if it's visible
-                  if (welcomeOverlay) {
-                    welcomeOverlay.style.display = 'none';
-                    welcomeOverlay.classList.add('slide-out');
-                  }
-                  filterOverlay.classList.add('visible');
-                  // Initialize UI first (set up handlers), then restore selections
-                  initializeFilterUI(false);
-                  restoreFilterSelections();
-                }
-              }, true, true); // Pass true to skip welcome overlay, true for faster animation
-            }
-          } else {
-            // For style mode, go back to specific-menu
-            navigationState = 'specific-menu';
-            animateModelBackToRight(() => {
-              setupWelcomeButtons('specific-menu');
-              // Back button stays visible at specific-menu
-            });
-          }
-        } else if (navigationState === 'specific-menu') {
-          // Style/Clothing Items menu → go back to initial page
-          // Just change the welcome screen buttons, don't animate the model
-          navigationState = 'welcome';
-          setupWelcomeButtons('welcome');
-          if (backButton) backButton.classList.remove('visible');
-        }
+    if (navDresses) {
+      navDresses.addEventListener('click', (e) => {
+        e.preventDefault();
+        setExperience('dresses');
       });
     }
 
@@ -1802,8 +3083,145 @@
     }
     window.addEventListener("resize", onResize);
 
-    // Welcome overlay setup
-    const welcomeOverlay = document.getElementById("welcome-overlay");
+    // Intro overlay setup
+    const introOverlay = document.getElementById("intro-overlay");
+    const introStartButton = document.getElementById("intro-start-button");
+    
+    // Cards toggle functionality (mobile/narrow screens) - works for collections, styles, and dresses
+    const productCardsToggle = document.getElementById('product-cards-toggle');
+    const productCardsContainer = document.getElementById('product-cards-container');
+    const productCardsBackdrop = document.getElementById('product-cards-backdrop');
+    const styleCard = document.getElementById('style-card');
+    const dressesCardContainer = document.getElementById('dresses-card-container');
+    
+    if (productCardsToggle) {
+      let cardsOpen = false;
+      
+      function toggleCards() {
+        cardsOpen = !cardsOpen;
+        const isMobile = window.innerWidth <= 768;
+        const isIPadPortrait = window.innerWidth >= 769 && window.innerWidth <= 1024 && window.innerHeight > window.innerWidth;
+        
+        if (cardsOpen && (isMobile || isIPadPortrait)) {
+          // Show appropriate cards based on current experience
+          if (currentExperience === 'build' && productCardsContainer) {
+            productCardsContainer.classList.add('visible');
+          } else if (currentExperience === 'looks' && styleCard) {
+            styleCard.classList.add('visible');
+          } else if (currentExperience === 'dresses' && dressesCardContainer) {
+            dressesCardContainer.classList.add('visible');
+          }
+          if (productCardsBackdrop) productCardsBackdrop.classList.add('visible');
+          productCardsToggle.classList.add('active');
+        } else {
+          // Hide cards
+          if (productCardsContainer) productCardsContainer.classList.remove('visible');
+          if (styleCard) styleCard.classList.remove('visible');
+          if (dressesCardContainer) dressesCardContainer.classList.remove('visible');
+          if (productCardsBackdrop) productCardsBackdrop.classList.remove('visible');
+          productCardsToggle.classList.remove('active');
+        }
+      }
+      
+      productCardsToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleCards();
+      });
+      
+      if (productCardsBackdrop) {
+        productCardsBackdrop.addEventListener('click', () => {
+          if (cardsOpen) {
+            toggleCards();
+          }
+        });
+      }
+      
+      // Update toggle button visibility on resize
+      window.addEventListener('resize', () => {
+        const isMobile = window.innerWidth <= 768;
+        const isIPadPortrait = window.innerWidth >= 769 && window.innerWidth <= 1024 && window.innerHeight > window.innerWidth;
+        
+        if (isMobile || isIPadPortrait) {
+          // Mobile/iPad: show toggle, hide cards by default unless manually opened
+          productCardsToggle.style.display = 'flex';
+          if (!cardsOpen) {
+            if (productCardsContainer) productCardsContainer.classList.remove('visible');
+            if (styleCard) styleCard.classList.remove('visible');
+            if (dressesCardContainer) dressesCardContainer.classList.remove('visible');
+            if (productCardsBackdrop) productCardsBackdrop.classList.remove('visible');
+          }
+        } else {
+          // Desktop: hide toggle, show cards normally
+          productCardsToggle.style.display = 'none';
+          if (productCardsBackdrop) productCardsBackdrop.classList.remove('visible');
+          productCardsToggle.classList.remove('active');
+          cardsOpen = false;
+        }
+      });
+    }
+    
+    
+    // Demo modal setup
+    const demoModal = document.getElementById("demo-modal");
+    const requestDemoButton = document.getElementById("request-demo-button");
+    const demoModalClose = document.getElementById("demo-modal-close");
+    const demoModalCancel = document.getElementById("demo-modal-cancel");
+    const demoForm = document.getElementById("demo-form");
+    const demoEmailInput = document.getElementById("demo-email");
+    
+    // Show demo modal
+    if (requestDemoButton) {
+      requestDemoButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (demoModal) demoModal.classList.add("visible");
+        if (demoEmailInput) demoEmailInput.focus();
+      });
+    }
+    
+    // Close demo modal
+    function closeDemoModal() {
+      if (demoModal) demoModal.classList.remove("visible");
+      if (demoEmailInput) demoEmailInput.value = "";
+    }
+    
+    if (demoModalClose) {
+      demoModalClose.addEventListener("click", closeDemoModal);
+    }
+    
+    if (demoModalCancel) {
+      demoModalCancel.addEventListener("click", closeDemoModal);
+    }
+    
+    // Close modal when clicking outside
+    if (demoModal) {
+      demoModal.addEventListener("click", (e) => {
+        if (e.target === demoModal) {
+          closeDemoModal();
+        }
+      });
+    }
+    
+    // Demo form submission - submit to Formspree
+    if (demoForm) {
+      demoForm.addEventListener("submit", (e) => {
+        // Let the form submit naturally to Formspree
+        // Formspree will handle the submission
+        const email = demoEmailInput.value.trim();
+        if (email) {
+          // Form will submit to Formspree, close modal after a brief delay
+          setTimeout(() => {
+            closeDemoModal();
+          }, 100);
+        }
+      });
+    }
+    
+    // Intro start button handler - default to looks mode
+    if (introStartButton) {
+      introStartButton.addEventListener("click", () => {
+        setExperience('looks');
+      });
+    }
     
     let isAnimating = false;
     const animationDuration = 1200; // milliseconds
@@ -1811,86 +3229,30 @@
     let initialRotationValue = 0; // will be set when button is clicked
     
     function startAnimation() {
-      if (isAnimating) return;
-      
-      isAnimating = true;
-      isRotating = false; // Stop the rotation
-      welcomeOverlay.classList.add("slide-out");
-      
-      // Capture the current rotation as the initial value (normalized to 0-2π)
-      initialRotationValue = currentRotation % MAX_ROTATION;
-      if (initialRotationValue < 0) initialRotationValue += MAX_ROTATION;
-      
-      // Start the clothing animation
-      animationStartTime = performance.now();
-      
-      function animateClothing() {
-        if (!isAnimating) return;
-        
-        const elapsed = performance.now() - animationStartTime;
-        const progress = Math.min(elapsed / animationDuration, 1);
-        
-        // Easing function (ease-out-cubic)
-        const easeProgress = 1 - Math.pow(1 - progress, 3);
-        
-        // Smoothly rotate back to 0 (initial position) while translating to center
-        const targetRotation = 0;
-        currentRotation = initialRotationValue + (targetRotation - initialRotationValue) * easeProgress;
-        clothingGroup.rotation.y = currentRotation;
-        
-        // Smoothly translate from initial position to center (horizontally and vertically)
-        const startX = isMobile ? leftCenterX : rightCenterX;
-        const startY = isMobile ? leftCenterY : rightCenterY;
-        const targetX = targetCenterX;
-        clothingGroup.position.x = startX + (targetX - startX) * easeProgress;
-        
-        // Smoothly translate from lower position to target height
-        const targetY = targetCenterY;
-        clothingGroup.position.y = startY + (targetY - startY) * easeProgress;
-        
-        // Camera target stays at center (already at 0), no need to animate it
-        
-        if (progress < 1) {
-          requestAnimationFrame(animateClothing);
-        } else {
-          // Animation complete
-          clothingGroup.position.x = targetCenterX;
-          clothingGroup.position.y = targetCenterY;
-          clothingGroup.rotation.y = 0;
-          currentRotation = 0;
-          isAnimating = false;
-          
-          // Reload all items based on mode
-          if (currentMode === 'styles') {
-            loadStyleCombination(currentStyleIndex).catch(err => {
-              console.error('Error loading style combination:', err);
-            });
-          } else {
-            ["shirts", "pants", "shoes"].forEach((type) => {
-              if (assets[type] && assets[type].length > 0) {
-                loadAllCarouselItems(type, false);
-              }
-            });
+      // No animation - items stay in center
+      // Just ensure position is centered
+      clothingGroup.position.x = targetCenterX;
+      clothingGroup.position.y = targetCenterY;
+      clothingGroup.rotation.y = 0;
+
+      // Load items directly based on experience
+      if (currentExperience === 'looks') {
+        loadStyleCombination(currentStyleIndex).catch(err => {
+          console.error('Error loading style combination:', err);
+        });
+      } else if (currentExperience === 'build') {
+        ["shirts", "pants", "shoes"].forEach((type) => {
+          if (assets[type] && assets[type].length > 0) {
+            loadAllCarouselItems(type, false);
           }
-          // Initialize mode UI (this will handle showing arrows based on mode)
-          updateModeUI();
-          
-          // Show arrow controls and mode button when items reach center (after updateModeUI)
-          document.querySelectorAll(".arrow-controls.visible").forEach(ctrl => {
-            ctrl.classList.add("visible", "show-after-click");
-          });
-          const modeButton = document.getElementById('mode-button');
-          if (modeButton) modeButton.classList.add('visible');
-        }
+        });
       }
-      
-      requestAnimationFrame(animateClothing);
+
+      // Apply UI state
+      applyState();
     }
     
-    // Welcome screen button handlers
-    const freeBrowseButton = document.getElementById("free-browse-button");
-    const specificButton = document.getElementById("specific-button");
-    const welcomeButtons = document.getElementById("welcome-buttons");
+    // Legacy button handlers removed - navigation now handled by intro overlay
     
     // Helper function to shuffle array (Fisher-Yates algorithm)
     function shuffleArray(array) {
@@ -2048,11 +3410,61 @@
     // Store filter option click handlers to avoid duplicates
     let filterOptionHandlers = new Map();
     
+    // Filter label mapping
+    const filterLabels = {
+      'shirt': 'Shirts',
+      'jacket': 'Jackets',
+      'shorts': 'Shorts',
+      'skirt': 'Skirts',
+      'jeans': 'Jeans',
+      'leggings': 'Leggings',
+      'pants': 'Pants',
+      'basketball': 'Basketball',
+      'tennis': 'Tennis',
+      'dress': 'Dress',
+      'dunks': 'Dunks'
+    };
+    
+    // Update selected filters display
+    function updateSelectedFiltersDisplay() {
+      const selectedContainer = document.getElementById('filter-selected');
+      const selectedItems = document.getElementById('filter-selected-items');
+      if (!selectedContainer || !selectedItems) return;
+      
+      // Collect all selected filters
+      const allSelected = [];
+      if (selectedFilters.tops.length > 0) {
+        allSelected.push('Tops: ' + selectedFilters.tops.map(f => filterLabels[f] || f).join(', '));
+      }
+      if (selectedFilters.bottoms.length > 0) {
+        allSelected.push('Bottoms: ' + selectedFilters.bottoms.map(f => filterLabels[f] || f).join(', '));
+      }
+      if (selectedFilters.shoes.length > 0) {
+        allSelected.push('Shoes: ' + selectedFilters.shoes.map(f => filterLabels[f] || f).join(', '));
+      }
+      
+      // Clear existing tags
+      selectedItems.innerHTML = '';
+      
+      if (allSelected.length > 0) {
+        selectedContainer.classList.remove('empty');
+        allSelected.forEach(item => {
+          const tag = document.createElement('div');
+          tag.className = 'filter-selected-tag';
+          tag.textContent = item;
+          selectedItems.appendChild(tag);
+        });
+      } else {
+        selectedContainer.classList.add('empty');
+      }
+    }
+    
     // Initialize filter UI
     function initializeFilterUI(resetFilters = false) {
       const filterOverlay = document.getElementById('filter-overlay');
       const filterOptions = document.querySelectorAll('.filter-option');
       const applyButton = document.getElementById('apply-filters-button');
+      const resetButton = document.getElementById('reset-filters-button');
       
       // Only reset filter selections if explicitly requested (not when restoring)
       if (resetFilters) {
@@ -2095,11 +3507,26 @@
             option.classList.add('selected');
             filterArray.push(filterValue);
           }
+          
+          // Update selected filters display
+          updateSelectedFiltersDisplay();
         };
         
         option.addEventListener('click', handler);
         filterOptionHandlers.set(option, handler);
       });
+      
+      // Reset button handler
+      if (resetButton && !resetButton._resetHandler) {
+        resetButton._resetHandler = () => {
+          selectedFilters = { tops: [], bottoms: [], shoes: [] };
+          filterOptions.forEach(option => {
+            option.classList.remove('selected');
+          });
+          updateSelectedFiltersDisplay();
+        };
+        resetButton.addEventListener('click', resetButton._resetHandler);
+      }
       
       // Remove old apply button listener if it exists
       if (applyButton && applyButton._applyHandler) {
@@ -2121,17 +3548,18 @@
         // Hide filter overlay
         filterOverlay.classList.remove('visible');
         
-        // Navigate to clothing items view with animation
-        navigationState = 'clothing-items';
-        currentMode = 'casual';
-        isAnimating = false;
-        startAnimation();
+        // Show clothing items view
+        // Switch to build mode
+        setExperience('build');
       };
       
       if (applyButton) {
         applyButton._applyHandler = applyHandler;
         applyButton.addEventListener('click', applyHandler);
       }
+      
+      // Update selected filters display
+      updateSelectedFiltersDisplay();
     }
     
     // Restore filter selections from last applied filters
@@ -2163,18 +3591,15 @@
           option.classList.add('selected');
         }
       });
+      
+      // Update selected filters display
+      updateSelectedFiltersDisplay();
     }
     
     // Show filter overlay
     function showFilterOverlay() {
       const filterOverlay = document.getElementById('filter-overlay');
-      const welcomeOverlay = document.getElementById('welcome-overlay');
       if (filterOverlay) {
-        // Hide welcome overlay if visible
-        if (welcomeOverlay) {
-          welcomeOverlay.style.display = 'none';
-          welcomeOverlay.classList.add('slide-out');
-        }
         filterOverlay.classList.add('visible');
         // Reset filters and initialize UI (fresh start from menu)
         selectedFilters = { tops: [], bottoms: [], shoes: [] };
@@ -2191,27 +3616,9 @@
       }
     }
     
-    // Free Browse button handler
-    freeBrowseButton.addEventListener("click", () => {
-      randomizeAssets();
-      navigationState = 'browse';
-      currentMode = 'casual';
-      startAnimation();
-    });
+    // Legacy button handlers removed - navigation now handled by intro overlay
     
-    // Specific button handler - show Style and Clothing Items buttons
-    specificButton.addEventListener("click", () => {
-      navigationState = 'specific-menu';
-      setupWelcomeButtons('specific-menu');
-      const backBtn = document.getElementById('back-button');
-      if (backBtn) backBtn.classList.add('visible');
-    });
-    
-    // Legacy go button handler (kept for compatibility - check if exists)
-    const legacyGoButton = document.getElementById("go-button");
-    if (legacyGoButton) {
-      legacyGoButton.addEventListener("click", startAnimation);
-    }
+    // Legacy go button handler removed
 
     // Initialize: load initial models
     // Verify we have assets before loading
@@ -2231,14 +3638,35 @@
       console.error("No assets found in manifest.");
     }
 
+    // Store current models for rotation control
+    const currentModels = {
+      shirts: null,
+      pants: null,
+      shoes: null,
+      dresses: null
+    };
+    
     function animate() {
       requestAnimationFrame(animate);
       
-      // Rotate clothing in place at the start (continuous rotation around initial offset)
-      if (isRotating) {
-        currentRotation += rotationSpeed;
-        clothingGroup.rotation.y = currentRotation;
+      // Increment global angle once per frame (not per item)
+      if (rotationController.enabled) {
+        rotationController.increment();
       }
+      
+      // Apply rotation to current visible models (not groups)
+      ['shirts', 'pants', 'shoes', 'dresses'].forEach(type => {
+        if (rotationController.enabled && currentModels[type] && groups[type] && groups[type].visible) {
+          // Apply rotation to the model itself (first child in current slot)
+          const currentSlot = carouselSlots[type].current;
+          if (currentSlot && currentSlot.children.length > 0) {
+            const model = currentSlot.children[0];
+            if (model && model.isObject3D) {
+              model.rotation.y = rotationController.getAngle(); // Apply global angle
+            }
+          }
+        }
+      });
       
       controls.update();
       renderer.render(scene, camera);

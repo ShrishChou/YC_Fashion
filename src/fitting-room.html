@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3D Fitting Room</title>
+  <title>mirim</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -97,6 +97,40 @@
         top: 35%;
       }
     }
+    /* iPad portrait - full screen layout (like mobile) */
+    @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+      #welcome-overlay {
+        width: 100%;
+      }
+      #welcome-overlay.slide-out {
+        display: none;
+      }
+      /* iPad portrait: position arrows at screen edges */
+      .arrow-controls {
+        width: 100%;
+      }
+      .arrow-btn.left {
+        left: 10px !important;
+        right: auto !important;
+      }
+      .arrow-btn.right {
+        right: 10px !important;
+        left: auto !important;
+      }
+      /* Keep individual clothing type vertical positions */
+      .arrow-controls.shirts {
+        top: 25%;
+      }
+      .arrow-controls.pants {
+        top: 45%;
+      }
+      .arrow-controls.shoes {
+        top: 65%;
+      }
+      .arrow-controls.dresses {
+        top: 35%;
+      }
+    }
     #welcome-content {
       text-align: center;
       max-width: 400px;
@@ -116,6 +150,48 @@
       margin: 0 0 40px 0;
       line-height: 1.6;
     }
+    #welcome-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    #welcome-buttons.two-buttons {
+      flex-direction: row;
+      gap: 20px;
+      max-width: 400px;
+    }
+    .welcome-button {
+      background: linear-gradient(135deg, #3f5efb 0%, #6a85ff 100%);
+      border: none;
+      color: #fff;
+      padding: 16px 48px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
+      box-shadow: 0 10px 30px rgba(82, 114, 255, 0.4);
+      width: 100%;
+    }
+    .welcome-button.hidden {
+      opacity: 0;
+      pointer-events: none;
+      width: 0;
+      padding: 16px 0;
+      margin: 0;
+    }
+    .welcome-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(82, 114, 255, 0.5);
+    }
+    .welcome-button:active {
+      transform: translateY(0);
+    }
+    /* Legacy go-button styling for compatibility */
     #go-button {
       background: linear-gradient(135deg, #3f5efb 0%, #6a85ff 100%);
       border: none;
@@ -217,17 +293,26 @@
     .arrow-btn.right {
       right: calc(50% - 180px);
     }
-    /* Tablet: slightly closer spacing */
-    @media (max-width: 1024px) {
+    /* iPad landscape: wider spacing for better usability */
+    @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
       .arrow-btn.left {
-        left: calc(50% - 140px);
+        left: calc(50% - 220px);
       }
       .arrow-btn.right {
-        right: calc(50% - 140px);
+        right: calc(50% - 220px);
       }
     }
-    /* Small screens: closer to center */
-    @media (max-width: 900px) {
+    /* Medium screens (770-900px): wider spacing to prevent arrows being too close */
+    @media (min-width: 770px) and (max-width: 900px) {
+      .arrow-btn.left {
+        left: calc(50% - 160px);
+      }
+      .arrow-btn.right {
+        right: calc(50% - 160px);
+      }
+    }
+    /* Tablet: slightly closer spacing */
+    @media (max-width: 769px) {
       .arrow-btn.left {
         left: calc(50% - 100px);
       }
@@ -301,6 +386,178 @@
     #mode-button:active {
       transform: translateX(-50%) translateY(0);
     }
+    #back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      background: rgba(63, 94, 251, 0.8);
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, background 0.2s ease;
+      z-index: 200;
+    }
+    #back-button.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #back-button:hover {
+      background: rgba(63, 94, 251, 1);
+    }
+    .arrow-controls.styles {
+      top: 30%;
+      left: 0;
+      right: 0;
+    }
+    /* Filter selection screen */
+    #filter-overlay {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      background: rgba(9, 11, 18, 0.95);
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      padding: 40px;
+      box-sizing: border-box;
+      z-index: 150;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      overflow-y: auto;
+    }
+    #filter-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    @media (max-width: 768px) {
+      #filter-overlay {
+        width: 100%;
+      }
+    }
+    /* iPad portrait - full screen filter overlay */
+    @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+      #filter-overlay {
+        width: 100%;
+      }
+    }
+    #filter-content {
+      max-width: 500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    #filter-content h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 0 0 30px 0;
+      background: linear-gradient(135deg, #9fb3ff 0%, #6a85ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    /* Center filter text on smaller devices */
+    @media (max-width: 768px) {
+      #filter-content {
+        text-align: center;
+      }
+      #filter-content h2 {
+        text-align: center;
+      }
+      .filter-category h3 {
+        text-align: center;
+      }
+    }
+    /* Center filter text on iPad portrait */
+    @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+      #filter-content {
+        text-align: center;
+      }
+      #filter-content h2 {
+        text-align: center;
+      }
+      .filter-category h3 {
+        text-align: center;
+      }
+    }
+    .filter-category {
+      margin-bottom: 40px;
+    }
+    .filter-category h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 20px 0;
+      color: #e6e9f2;
+    }
+    .filter-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 16px;
+    }
+    .filter-option {
+      aspect-ratio: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #e6e9f2;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      text-align: center;
+    }
+    .filter-option:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    .filter-option.selected {
+      background: linear-gradient(135deg, #3f5efb 0%, #6a85ff 100%);
+      border-color: #6a85ff;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(106, 133, 255, 0.4);
+    }
+    .filter-option-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .filter-option-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin: 0;
+    }
+    #apply-filters-button {
+      margin-top: 30px;
+      padding: 16px 48px;
+      background: linear-gradient(135deg, #3f5efb 0%, #6a85ff 100%);
+      border: none;
+      color: #fff;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 10px 30px rgba(82, 114, 255, 0.4);
+      width: 100%;
+    }
+    #apply-filters-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(82, 114, 255, 0.5);
+    }
+    #apply-filters-button:active {
+      transform: translateY(0);
+    }
     /* Toast removed */
   </style>
 </head>
@@ -311,7 +568,10 @@
       <div id="welcome-content">
         <h1>Welcome</h1>
         <p>Experience our 3D fitting room. Explore different styles and see how they look together.</p>
-        <button id="go-button">Go</button>
+        <div id="welcome-buttons" class="two-buttons">
+          <button class="welcome-button" id="free-browse-button">Free Browse</button>
+          <button class="welcome-button" id="specific-button">Specific</button>
+        </div>
       </div>
     </div>
     <div class="arrow-controls shirts visible" data-type="shirts" id="shirts-controls">
@@ -331,6 +591,76 @@
       <button class="arrow-btn right" data-type="dresses" data-dir="1"></button>
     </div>
     <button id="mode-button">Dresses</button>
+    <button id="back-button">← Back</button>
+    <div class="arrow-controls styles" data-type="styles" id="styles-controls" style="display: none;">
+      <button class="arrow-btn left" data-type="styles" data-dir="-1"></button>
+      <button class="arrow-btn right" data-type="styles" data-dir="1"></button>
+    </div>
+    <div id="filter-overlay">
+      <div id="filter-content">
+        <h2>Filter Clothing</h2>
+        <div class="filter-category">
+          <h3>Tops</h3>
+          <div class="filter-options" id="tops-options">
+            <button class="filter-option" data-filter="shirt">
+              <div class="filter-option-icon">👕</div>
+              <div class="filter-option-title">Shirts</div>
+            </button>
+            <button class="filter-option" data-filter="jacket">
+              <div class="filter-option-icon">🧥</div>
+              <div class="filter-option-title">Jackets</div>
+            </button>
+          </div>
+        </div>
+        <div class="filter-category">
+          <h3>Bottoms</h3>
+          <div class="filter-options" id="bottoms-options">
+            <button class="filter-option" data-filter="shorts">
+              <div class="filter-option-icon">🩳</div>
+              <div class="filter-option-title">Shorts</div>
+            </button>
+            <button class="filter-option" data-filter="skirt">
+              <div class="filter-option-icon">👗</div>
+              <div class="filter-option-title">Skirts</div>
+            </button>
+            <button class="filter-option" data-filter="jeans">
+              <div class="filter-option-icon">👖</div>
+              <div class="filter-option-title">Jeans</div>
+            </button>
+            <button class="filter-option" data-filter="leggings">
+              <div class="filter-option-icon">🧦</div>
+              <div class="filter-option-title">Leggings</div>
+            </button>
+            <button class="filter-option" data-filter="pants">
+              <div class="filter-option-icon">👔</div>
+              <div class="filter-option-title">Pants</div>
+            </button>
+          </div>
+        </div>
+        <div class="filter-category">
+          <h3>Shoes</h3>
+          <div class="filter-options" id="shoes-options">
+            <button class="filter-option" data-filter="basketball">
+              <div class="filter-option-icon">🏀</div>
+              <div class="filter-option-title">Basketball</div>
+            </button>
+            <button class="filter-option" data-filter="tennis">
+              <div class="filter-option-icon">🎾</div>
+              <div class="filter-option-title">Tennis</div>
+            </button>
+            <button class="filter-option" data-filter="dress">
+              <div class="filter-option-icon">👠</div>
+              <div class="filter-option-title">Dress</div>
+            </button>
+            <button class="filter-option" data-filter="dunks">
+              <div class="filter-option-icon">👟</div>
+              <div class="filter-option-title">Dunks</div>
+            </button>
+          </div>
+        </div>
+        <button id="apply-filters-button">Apply Filters</button>
+      </div>
+    </div>
   </div>
   <script type="importmap">
     {
@@ -348,11 +678,15 @@
     // Assets manifest - inline dictionary (no separate file needed)
     const manifest = {
       shirts: [
-        "object_0-10.glb",
-        "object_0-11.glb",
-        "object_0-12.glb",
-        "object_0-13.glb",
-        "object_0.glb"
+        "shirt1.glb",
+        "shirt2.glb",
+        "shirt4.glb",
+        "shirt5.glb",
+        "jacket.glb",
+        "jacket2.glb",
+        "jacket5.glb",
+        "jacket6.glb",
+        "jacket9.glb"
       ],
       pants: [
         "WDressPants1.glb",
@@ -373,11 +707,15 @@
         "mjeans3.glb"
       ],
       shoes: [
-        "object_0-13.glb",
-        "object_0-15.glb",
+        "dunks.glb",
+        "dunks2.glb",
+        "dressmensShoes.glb",
+        "dresswomensshoes.glb",
+        "dresswomensshoes2.glb",
         "WTennisShoes1.glb",
         "MBasketBallShoes1.glb",
-        "MTennisShoes1.glb"
+        "MTennisShoes1.glb",
+
       ],
       dresses: [
         "wdress1.glb",
@@ -393,6 +731,27 @@
         "WSkirt2.glb"
       ]
     };
+    const BASE = new URL(".", window.location.href); // e.g. https://shrishchou.github.io/YC_Fashion/
+
+    function u(path) {
+      return new URL(path.replace(/^\/+/, ""), BASE).toString(); // strips any leading /
+    }
+
+    const assets = {
+      shirts:  (manifest.shirts  ?? []).map(f => u(`shirts/${f}`)),
+      pants:   (manifest.pants   ?? []).map(f => u(`pants/${f}`))
+                .concat((manifest.shorts ?? []).map(f => u(`shorts/${f}`))),
+      shoes:   (manifest.shoes   ?? []).map(f => u(`shoes/${f}`)),
+      dresses: (manifest.dresses ?? []).map(f => u(`dresses/${f}`)),
+    };
+    
+    // Store original asset order (deep copy for later randomization)
+    const originalAssets = {
+      shirts: [...assets.shirts],
+      pants: [...assets.pants],
+      shoes: [...assets.shoes],
+      dresses: [...assets.dresses]
+    };
     
     // Helper to check if an item is a short
     function isShort(filepath) {
@@ -400,16 +759,16 @@
     }
     
     // Build asset paths from manifest dictionary
-    const pantsItems = manifest.pants ? manifest.pants.map(file => `../docs/pants/${file}`) : [];
-    const shortsItems = manifest.shorts ? manifest.shorts.map(file => `../docs/shorts/${file}`) : [];
+    const pantsItems = manifest.pants ? manifest.pants.map(file => `/pants/${file}`) : [];
+    const shortsItems = manifest.shorts ? manifest.shorts.map(file => `/shorts/${file}`) : [];
     
     // Build full paths from manifest
-    const assets = {
-      shirts: manifest.shirts ? manifest.shirts.map(file => `../docs/shirts/${file}`) : [],
-      pants: [...pantsItems, ...shortsItems], // Combine pants and shorts
-      shoes: manifest.shoes ? manifest.shoes.map(file => `../docs/shoes/${file}`) : [],
-      dresses: manifest.dresses ? manifest.dresses.map(file => `../docs/dresses/${file}`) : []
-    };
+    // const assets = {
+    //   shirts: manifest.shirts ? manifest.shirts.map(file => `/shirts/${file}`) : [],
+    //   pants: [...pantsItems, ...shortsItems], // Combine pants and shorts
+    //   shoes: manifest.shoes ? manifest.shoes.map(file => `/shoes/${file}`) : [],
+    //   dresses: manifest.dresses ? manifest.dresses.map(file => `/dresses/${file}`) : []
+    // };
     
     console.log("Loaded assets from manifest:", assets);
 
@@ -428,7 +787,9 @@
     };
 
     // Mobile detection (needed for positioning)
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    // Include iPad portrait (768-1024px width in portrait orientation) as mobile behavior
+    const isIPadPortrait = window.innerWidth >= 769 && window.innerWidth <= 1024 && window.innerHeight > window.innerWidth;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768 || isIPadPortrait;
 
     // Position constants
     // On mobile, start from left; on desktop, start from right
@@ -470,6 +831,10 @@
     controls.minDistance = 4;
     controls.maxDistance = 14;
     controls.maxPolarAngle = Math.PI * 0.55;
+    
+    // Store initial camera and controls state for back animation
+    const initialCameraPosition = new THREE.Vector3(0, 7.5, 14);
+    const initialControlsTarget = new THREE.Vector3(0, 3.4, 0);
 
     const hemiLight = new THREE.HemisphereLight(0x8fb2ff, 0x0b0d14, 0.75);
     hemiLight.position.set(0, 6, 0);
@@ -489,8 +854,38 @@
     const loader = new GLTFLoader();
     const current = { shirts: 0, pants: 0, shoes: 0, dresses: 0 };
     
-    // Mode state: 'casual' (shirts+pants) or 'dresses'
+    // Mode state: 'casual' (shirts+pants), 'dresses', or 'styles'
     let currentMode = 'casual';
+    
+    // Navigation state tracking
+    let navigationState = 'welcome'; // 'welcome', 'browse', 'specific-menu', 'style', 'clothing-items', 'clothing-items-filter'
+    
+    // Filter state
+    let selectedFilters = {
+      tops: [],
+      bottoms: [],
+      shoes: []
+    };
+    
+    // Store last applied filters to remember them when going back
+    let lastAppliedFilters = {
+      tops: [],
+      bottoms: [],
+      shoes: []
+    };
+    
+    // Pre-defined style combinations (5 styles with random pairs)
+    const styleCombinations = [
+      { shirt: 0, pant: 0, shoe: 0 },
+      { shirt: 6, pant: 12, shoe: 0 },  // Style 1: Random mix
+      { shirt: 1, pant: 8, shoe: 0 }, // Style 2: Random mix
+      { shirt: 4, pant: 2, shoe: 1 }, // Style 3: Random mix
+       // Style 4: Random mix
+      { shirt: 2, pant: 1, shoe: 0 },
+      { shirt: 0, pant: 2, shoe: 5 } 
+      
+    ];
+    let currentStyleIndex = 0;
     
     // Carousel structure: each type has 3 slots (prev, current, next)
     const carouselSlots = {
@@ -636,7 +1031,12 @@
       let zAdjustment = zOffsets[type]; // Start with base z offset
       
       if (type === "shoes") {
-        scaleTarget = 0.5;
+        // Scale down dresswomensshoes slightly more than other shoes
+        if (url.toLowerCase().includes('dresswomensshoes')) {
+          scaleTarget = 0.4; // Slightly smaller than regular shoes (0.5)
+        } else {
+          scaleTarget = 0.5;
+        }
       } else if (type === "pants") {
         // Check if this is a short based on file path
         const isAShort = isShort(url);
@@ -790,24 +1190,120 @@
         }
       }
     
+    // Load a style combination
+    function loadStyleCombination(styleIndex) {
+      const style = styleCombinations[styleIndex];
+      
+      // Ensure indices are within bounds of original assets
+      const shirtIndex = Math.min(Math.max(0, style.shirt), originalAssets.shirts.length - 1);
+      const pantIndex = Math.min(Math.max(0, style.pant), originalAssets.pants.length - 1);
+      const shoeIndex = Math.min(Math.max(0, style.shoe), originalAssets.shoes.length - 1);
+      
+      // For styles mode, always use original assets
+      assets.shirts = [...originalAssets.shirts];
+      assets.pants = [...originalAssets.pants];
+      assets.shoes = [...originalAssets.shoes];
+      
+      // Set current indices
+      current.shirts = shirtIndex;
+      current.pants = pantIndex;
+      current.shoes = shoeIndex;
+      
+      // Load all three items simultaneously
+      const promises = [
+        loadAllCarouselItems('shirts'),
+        loadAllCarouselItems('pants'),
+        loadAllCarouselItems('shoes')
+      ];
+      
+      return Promise.all(promises);
+    }
+    
+    // Switch between styles
+    function switchStyle(dir) {
+      const newIndex = (currentStyleIndex + dir + styleCombinations.length) % styleCombinations.length;
+      currentStyleIndex = newIndex;
+      
+      loadStyleCombination(currentStyleIndex).catch(err => {
+        console.error('Error loading style combination:', err);
+      });
+    }
+    
     // Update arrow controls and mode button visibility based on current mode
     function updateModeUI() {
       const shirtsControls = document.querySelector('.arrow-controls.shirts');
       const pantsControls = document.querySelector('.arrow-controls.pants');
       const dressesControls = document.querySelector('.arrow-controls.dresses');
+      const stylesControls = document.querySelector('.arrow-controls.styles');
       const modeButton = document.getElementById('mode-button');
+      const backButton = document.getElementById('back-button');
       
-      if (!shirtsControls || !pantsControls || !dressesControls || !modeButton) return;
+      if (!shirtsControls || !pantsControls || !dressesControls || !modeButton || !backButton) return;
       
-      if (currentMode === 'casual') {
-        // Show shirts and pants controls, hide dresses
+      // Show back button for all modes except initial welcome screen
+      // This includes: browse, specific-menu, style, clothing-items
+      if (navigationState === 'welcome') {
+        // Initial welcome screen - hide back button
+        backButton.classList.remove('visible');
+      } else {
+        // All other screens - show back button
+        backButton.classList.add('visible');
+      }
+      
+      if (currentMode === 'styles') {
+        // Hide all individual controls (shirts, pants, shoes, dresses)
+        shirtsControls.style.display = 'none';
+        shirtsControls.classList.remove('visible');
+        
+        pantsControls.style.display = 'none';
+        pantsControls.classList.remove('visible');
+        // Restore pants controls data-type in case it was changed
+        const pantsLeftBtn = pantsControls.querySelector('.arrow-btn.left');
+        const pantsRightBtn = pantsControls.querySelector('.arrow-btn.right');
+        if (pantsLeftBtn) pantsLeftBtn.setAttribute('data-type', 'pants');
+        if (pantsRightBtn) pantsRightBtn.setAttribute('data-type', 'pants');
+        
+        const shoesControls = document.querySelector('.arrow-controls.shoes');
+        if (shoesControls) {
+          shoesControls.style.display = 'none';
+          shoesControls.classList.remove('visible');
+        }
+        
+        dressesControls.style.display = 'none';
+        dressesControls.classList.remove('visible');
+        
+        // Show only the styles controls (middle arrow)
+        if (stylesControls) {
+          stylesControls.style.display = 'flex';
+          stylesControls.classList.add('visible', 'show-after-click');
+        }
+        
+        modeButton.style.display = 'none';
+      } else if (currentMode === 'casual') {
+        // Show shirts, pants, and shoes controls, hide dresses and styles
         shirtsControls.style.display = 'flex';
         shirtsControls.classList.add('visible');
         pantsControls.style.display = 'flex';
         pantsControls.classList.add('visible');
+        // Restore pants controls data-type for casual mode
+        const pantsLeftBtn = pantsControls.querySelector('.arrow-btn.left');
+        const pantsRightBtn = pantsControls.querySelector('.arrow-btn.right');
+        if (pantsLeftBtn) pantsLeftBtn.setAttribute('data-type', 'pants');
+        if (pantsRightBtn) pantsRightBtn.setAttribute('data-type', 'pants');
+        
+        const shoesControls = document.querySelector('.arrow-controls.shoes');
+        if (shoesControls) {
+          shoesControls.style.display = 'flex';
+          shoesControls.classList.add('visible');
+        }
         dressesControls.style.display = 'none';
         dressesControls.classList.remove('visible');
+        if (stylesControls) {
+          stylesControls.style.display = 'none';
+          stylesControls.classList.remove('visible');
+        }
         modeButton.textContent = 'Dresses';
+        modeButton.style.display = 'block';
       } else if (currentMode === 'dresses') {
         // Hide shirts and pants controls, show dresses with single arrow pair
         shirtsControls.style.display = 'none';
@@ -816,6 +1312,10 @@
         pantsControls.classList.remove('visible');
         dressesControls.style.display = 'flex';
         dressesControls.classList.add('visible');
+        if (stylesControls) {
+          stylesControls.style.display = 'none';
+          stylesControls.classList.remove('visible');
+        }
         
         // Show both arrows for dresses (prev/next)
         const leftBtn = dressesControls.querySelector('.arrow-btn.left');
@@ -826,10 +1326,17 @@
         }
         
         modeButton.textContent = 'Casual';
+        modeButton.style.display = 'block';
       }
     }
 
     function switchItem(type, dir) {
+      // Handle styles mode separately
+      if (type === 'styles') {
+        switchStyle(dir);
+        return;
+      }
+      
       if (carouselAnimationState[type]) return; // Don't allow switching during loading
       
       const total = assets[type].length;
@@ -936,6 +1443,357 @@
         switchMode();
       });
     }
+    
+    // Unified function to animate model back to right side
+    function animateModelBackToRight(onComplete, skipWelcomeOverlay = false, fasterAnimation = false) {
+      if (isAnimating) return;
+      
+      isAnimating = true;
+      
+      // Make sure all groups are visible before resetting
+      if (groups.shirts) groups.shirts.visible = true;
+      if (groups.pants) groups.pants.visible = true;
+      if (groups.shoes) groups.shoes.visible = true;
+      
+      // Reset clothing items to initial fit (first items)
+      restoreOriginalAssets();
+      ["shirts", "pants", "shoes"].forEach((type) => {
+        if (assets[type] && assets[type].length > 0) {
+          current[type] = 0;
+          loadAllCarouselItems(type, false);
+        }
+      });
+      
+      // Hide all controls immediately
+      document.querySelectorAll('.arrow-controls').forEach(ctrl => {
+        ctrl.style.display = 'none';
+        ctrl.classList.remove('visible');
+      });
+      if (modeButton) {
+        modeButton.style.display = 'none';
+        modeButton.classList.remove('visible');
+      }
+      
+      // Show welcome overlay only if not skipping (for going back to filter screen)
+      if (!skipWelcomeOverlay) {
+        // Show welcome overlay first (for mobile where it uses display: none)
+        welcomeOverlay.style.display = 'flex';
+        // Force reflow to ensure display change is applied
+        welcomeOverlay.offsetHeight;
+        // Then remove slide-out class to animate back in
+        welcomeOverlay.classList.remove('slide-out');
+      } else {
+        // Hide welcome overlay when going back to filter screen
+        welcomeOverlay.style.display = 'none';
+        welcomeOverlay.classList.add('slide-out');
+      }
+      
+      // Start reverse animation - faster when going back to filter screen
+      const reverseAnimationDuration = fasterAnimation ? animationDuration * 0.5 : animationDuration;
+      animationStartTime = performance.now();
+      
+      // Capture starting position and rotation (current center position)
+      const fromX = clothingGroup.position.x;
+      const fromY = clothingGroup.position.y;
+      const fromRotation = currentRotation % MAX_ROTATION;
+      const normalizedFromRotation = fromRotation < 0 ? fromRotation + MAX_ROTATION : fromRotation;
+      
+      // Capture current camera position and controls target
+      const fromCameraPos = new THREE.Vector3().copy(camera.position);
+      const fromControlsTarget = new THREE.Vector3().copy(controls.target);
+      
+      // Target position and rotation (right side, rotation 0)
+      const toX = isMobile ? leftCenterX : rightCenterX;
+      const toY = isMobile ? leftCenterY : rightCenterY;
+      const toRotation = 0;
+      
+      function animateReverse() {
+        if (!isAnimating) return;
+        
+        const elapsed = performance.now() - animationStartTime;
+        const progress = Math.min(elapsed / reverseAnimationDuration, 1);
+        
+        // Easing function (ease-out-cubic) - smoother easing
+        const easeProgress = 1 - Math.pow(1 - progress, 3);
+        
+        // Smoothly translate from center back to initial position (right side)
+        clothingGroup.position.x = fromX + (toX - fromX) * easeProgress;
+        clothingGroup.position.y = fromY + (toY - fromY) * easeProgress;
+        
+        // Smoothly rotate back to initial rotation (0)
+        currentRotation = normalizedFromRotation + (toRotation - normalizedFromRotation) * easeProgress;
+        clothingGroup.rotation.y = currentRotation;
+        
+        // Smoothly animate camera position back to initial position
+        camera.position.x = fromCameraPos.x + (initialCameraPosition.x - fromCameraPos.x) * easeProgress;
+        camera.position.y = fromCameraPos.y + (initialCameraPosition.y - fromCameraPos.y) * easeProgress;
+        camera.position.z = fromCameraPos.z + (initialCameraPosition.z - fromCameraPos.z) * easeProgress;
+        
+        // Smoothly animate controls target back to initial target
+        controls.target.x = fromControlsTarget.x + (initialControlsTarget.x - fromControlsTarget.x) * easeProgress;
+        controls.target.y = fromControlsTarget.y + (initialControlsTarget.y - fromControlsTarget.y) * easeProgress;
+        controls.target.z = fromControlsTarget.z + (initialControlsTarget.z - fromControlsTarget.z) * easeProgress;
+        controls.update();
+        
+        if (progress < 1) {
+          requestAnimationFrame(animateReverse);
+        } else {
+          // Animation complete - reset to starting position and rotation
+          clothingGroup.position.x = toX;
+          clothingGroup.position.y = toY;
+          clothingGroup.rotation.y = toRotation;
+          currentRotation = toRotation;
+          
+          // Reset camera and controls to initial state
+          camera.position.copy(initialCameraPosition);
+          controls.target.copy(initialControlsTarget);
+          controls.update();
+          
+          isAnimating = false;
+          isRotating = true; // Continue rotation in place after animation
+          
+          // Call completion callback if provided
+          if (onComplete) onComplete();
+        }
+      }
+      
+      requestAnimationFrame(animateReverse);
+    }
+    
+    // Helper function to setup welcome buttons based on target state
+    function setupWelcomeButtons(targetState) {
+      const welcomeButtons = document.getElementById('welcome-buttons');
+      if (!welcomeButtons) return;
+      
+      if (targetState === 'welcome') {
+        // Initial welcome screen - Free Browse and Specific buttons
+        welcomeButtons.innerHTML = `
+          <button class="welcome-button" id="free-browse-button">Free Browse</button>
+          <button class="welcome-button" id="specific-button">Specific</button>
+        `;
+        welcomeButtons.classList.add('two-buttons');
+        
+        const freeBtn = document.getElementById('free-browse-button');
+        const specBtn = document.getElementById('specific-button');
+        
+        if (freeBtn) {
+          freeBtn.addEventListener('click', () => {
+            randomizeAssets();
+            navigationState = 'browse';
+            currentMode = 'casual';
+            isAnimating = false;
+            startAnimation();
+          });
+        }
+        
+        if (specBtn) {
+          specBtn.addEventListener('click', () => {
+            navigationState = 'specific-menu';
+            setupWelcomeButtons('specific-menu');
+            const backBtn = document.getElementById('back-button');
+            if (backBtn) backBtn.classList.add('visible');
+          });
+        }
+      } else if (targetState === 'specific-menu') {
+        // Specific menu - Style and Clothing Items buttons
+        welcomeButtons.innerHTML = '';
+        welcomeButtons.classList.remove('two-buttons');
+        welcomeButtons.style.gap = '16px';
+        
+        const styleBtn = document.createElement("button");
+        styleBtn.className = "welcome-button";
+        styleBtn.id = "style-button";
+        styleBtn.textContent = "Style";
+        
+        const clothingBtn = document.createElement("button");
+        clothingBtn.className = "welcome-button";
+        clothingBtn.id = "clothing-items-button";
+        clothingBtn.textContent = "Clothing Items";
+        
+        welcomeButtons.appendChild(styleBtn);
+        welcomeButtons.appendChild(clothingBtn);
+        
+        styleBtn.addEventListener("click", () => {
+          restoreOriginalAssets();
+          navigationState = 'style';
+          currentMode = 'styles';
+          currentStyleIndex = 0;
+          // Update UI immediately to hide all arrow controls except styles
+          updateModeUI();
+          isAnimating = false;
+          startAnimation();
+        });
+        
+        clothingBtn.addEventListener("click", () => {
+          restoreOriginalAssets();
+          // Show filter screen first instead of animating immediately
+          navigationState = 'clothing-items-filter';
+          showFilterOverlay();
+          const backBtn = document.getElementById('back-button');
+          if (backBtn) backBtn.classList.add('visible');
+        });
+      }
+    }
+    
+    // Reverse animation function (animate avatar back to starting position)
+    function reverseAnimation() {
+      // animateModelBackToRight now handles clothing reset internally
+      animateModelBackToRight(() => {
+        if (backButton) backButton.classList.remove('visible');
+        setupWelcomeButtons('welcome');
+      });
+    }
+    
+    
+    // Back button handler - navigates back to previous page in hierarchy
+    const backButton = document.getElementById('back-button');
+    if (backButton) {
+      backButton.addEventListener('click', () => {
+        if (navigationState === 'browse') {
+          // Free Browse mode → go back to initial page
+          // If currently in dresses mode, switch back to casual mode first
+          if (currentMode === 'dresses') {
+            // Switch from dresses to casual mode
+            currentMode = 'casual';
+            // Hide dresses
+            if (groups.dresses) groups.dresses.visible = false;
+            // Show shirts and pants
+            if (groups.shirts) groups.shirts.visible = true;
+            if (groups.pants) groups.pants.visible = true;
+            if (groups.shoes) groups.shoes.visible = true;
+            // Update UI to reflect casual mode
+            updateModeUI();
+          }
+          navigationState = 'welcome';
+          currentMode = 'casual';
+          reverseAnimation();
+        } else if (navigationState === 'clothing-items-filter') {
+          // Filter screen → go back to Style/Clothing Items menu (no animation)
+          navigationState = 'specific-menu';
+          // Clear filter selections (both current and last applied)
+          selectedFilters = { tops: [], bottoms: [], shoes: [] };
+          lastAppliedFilters = { tops: [], bottoms: [], shoes: [] };
+          // Restore original assets to clear any applied filters
+          restoreOriginalAssets();
+          // Make sure all groups are visible again (in case they were hidden by filters)
+          if (groups.shirts) groups.shirts.visible = true;
+          if (groups.pants) groups.pants.visible = true;
+          if (groups.shoes) groups.shoes.visible = true;
+          // Hide filter overlay and show welcome overlay with Style/Clothing Items buttons
+          hideFilterOverlay();
+          const welcomeOverlay = document.getElementById('welcome-overlay');
+          if (welcomeOverlay) {
+            welcomeOverlay.style.display = 'flex';
+            welcomeOverlay.classList.remove('slide-out');
+          }
+          setupWelcomeButtons('specific-menu');
+          // Back button stays visible at specific-menu
+        } else if (navigationState === 'style' || navigationState === 'clothing-items') {
+          // Style or Clothing Items mode → go back
+          // If currently in dresses mode, switch back to casual mode first
+          if (currentMode === 'dresses') {
+            // Switch from dresses to casual mode
+            currentMode = 'casual';
+            // Hide dresses
+            if (groups.dresses) groups.dresses.visible = false;
+            // Show shirts and pants
+            if (groups.shirts) groups.shirts.visible = true;
+            if (groups.pants) groups.pants.visible = true;
+            if (groups.shoes) groups.shoes.visible = true;
+            // Update UI to reflect casual mode
+            updateModeUI();
+          }
+          
+          // For clothing-items, go back to filter screen with remembered selections
+          if (navigationState === 'clothing-items') {
+            navigationState = 'clothing-items-filter';
+            // Make sure all groups are visible again before animating back
+            if (groups.shirts) groups.shirts.visible = true;
+            if (groups.pants) groups.pants.visible = true;
+            if (groups.shoes) groups.shoes.visible = true;
+            
+            // On mobile/iPad, show filter immediately without animation
+            if (isMobile || window.innerWidth <= 1024) {
+              // Reset clothing items to initial fit (first items)
+              restoreOriginalAssets();
+              ["shirts", "pants", "shoes"].forEach((type) => {
+                if (assets[type] && assets[type].length > 0) {
+                  current[type] = 0;
+                  loadAllCarouselItems(type, false);
+                }
+              });
+              
+              // Hide all controls
+              document.querySelectorAll('.arrow-controls').forEach(ctrl => {
+                ctrl.style.display = 'none';
+                ctrl.classList.remove('visible');
+              });
+              const modeButton = document.getElementById('mode-button');
+              if (modeButton) {
+                modeButton.style.display = 'none';
+                modeButton.classList.remove('visible');
+              }
+              
+              // Reset model position immediately (no animation on mobile/iPad)
+              clothingGroup.position.x = isMobile ? leftCenterX : rightCenterX;
+              clothingGroup.position.y = isMobile ? leftCenterY : rightCenterY;
+              clothingGroup.rotation.y = 0;
+              currentRotation = 0;
+              camera.position.copy(initialCameraPosition);
+              controls.target.copy(initialControlsTarget);
+              controls.update();
+              
+              // Show filter overlay immediately
+              const filterOverlay = document.getElementById('filter-overlay');
+              const welcomeOverlay = document.getElementById('welcome-overlay');
+              if (filterOverlay) {
+                if (welcomeOverlay) {
+                  welcomeOverlay.style.display = 'none';
+                  welcomeOverlay.classList.add('slide-out');
+                }
+                filterOverlay.classList.add('visible');
+                // Initialize UI first (set up handlers), then restore selections
+                initializeFilterUI(false);
+                restoreFilterSelections();
+              }
+            } else {
+              // On desktop, animate model back to right and reset clothing, then show filter screen
+              // Don't show welcome overlay - go straight to filter screen
+              // Use faster animation for better UX when going back to filters
+              animateModelBackToRight(() => {
+                // Show filter overlay with remembered selections after animation
+                const filterOverlay = document.getElementById('filter-overlay');
+                const welcomeOverlay = document.getElementById('welcome-overlay');
+                if (filterOverlay) {
+                  // Hide welcome overlay if it's visible
+                  if (welcomeOverlay) {
+                    welcomeOverlay.style.display = 'none';
+                    welcomeOverlay.classList.add('slide-out');
+                  }
+                  filterOverlay.classList.add('visible');
+                  // Initialize UI first (set up handlers), then restore selections
+                  initializeFilterUI(false);
+                  restoreFilterSelections();
+                }
+              }, true, true); // Pass true to skip welcome overlay, true for faster animation
+            }
+          } else {
+            // For style mode, go back to specific-menu
+            navigationState = 'specific-menu';
+            animateModelBackToRight(() => {
+              setupWelcomeButtons('specific-menu');
+              // Back button stays visible at specific-menu
+            });
+          }
+        } else if (navigationState === 'specific-menu') {
+          // Style/Clothing Items menu → go back to initial page
+          // Just change the welcome screen buttons, don't animate the model
+          navigationState = 'welcome';
+          setupWelcomeButtons('welcome');
+          if (backButton) backButton.classList.remove('visible');
+        }
+      });
+    }
 
     function onResize() {
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -946,7 +1804,6 @@
 
     // Welcome overlay setup
     const welcomeOverlay = document.getElementById("welcome-overlay");
-    const goButton = document.getElementById("go-button");
     
     let isAnimating = false;
     const animationDuration = 1200; // milliseconds
@@ -1002,28 +1859,359 @@
           clothingGroup.rotation.y = 0;
           currentRotation = 0;
           isAnimating = false;
-          // Show arrow controls and mode button when items reach center
+          
+          // Reload all items based on mode
+          if (currentMode === 'styles') {
+            loadStyleCombination(currentStyleIndex).catch(err => {
+              console.error('Error loading style combination:', err);
+            });
+          } else {
+            ["shirts", "pants", "shoes"].forEach((type) => {
+              if (assets[type] && assets[type].length > 0) {
+                loadAllCarouselItems(type, false);
+              }
+            });
+          }
+          // Initialize mode UI (this will handle showing arrows based on mode)
+          updateModeUI();
+          
+          // Show arrow controls and mode button when items reach center (after updateModeUI)
           document.querySelectorAll(".arrow-controls.visible").forEach(ctrl => {
             ctrl.classList.add("visible", "show-after-click");
           });
           const modeButton = document.getElementById('mode-button');
           if (modeButton) modeButton.classList.add('visible');
-          
-          // Reload all items (only current, no prev/next)
-          ["shirts", "pants", "shoes"].forEach((type) => {
-            if (assets[type] && assets[type].length > 0) {
-              loadAllCarouselItems(type, false);
-            }
-          });
-          // Initialize mode UI
-          updateModeUI();
         }
       }
       
       requestAnimationFrame(animateClothing);
     }
     
-    goButton.addEventListener("click", startAnimation);
+    // Welcome screen button handlers
+    const freeBrowseButton = document.getElementById("free-browse-button");
+    const specificButton = document.getElementById("specific-button");
+    const welcomeButtons = document.getElementById("welcome-buttons");
+    
+    // Helper function to shuffle array (Fisher-Yates algorithm)
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+    
+    // Function to randomize asset order (keep first item, shuffle the rest)
+    function randomizeAssets() {
+      // Keep first item, shuffle the rest
+      function shuffleFromSecond(array) {
+        if (array.length <= 1) return [...array];
+        const first = array[0];
+        const rest = shuffleArray([...array.slice(1)]);
+        return [first, ...rest];
+      }
+      
+      assets.shirts = shuffleFromSecond(originalAssets.shirts);
+      assets.pants = shuffleFromSecond(originalAssets.pants);
+      assets.shoes = shuffleFromSecond(originalAssets.shoes);
+      
+      // Reset current indices to start from the beginning
+      current.shirts = 0;
+      current.pants = 0;
+      current.shoes = 0;
+      
+      console.log("Assets randomized for free browse mode (first item preserved)");
+    }
+    
+    // Function to restore original asset order
+    function restoreOriginalAssets() {
+      assets.shirts = [...originalAssets.shirts];
+      assets.pants = [...originalAssets.pants];
+      assets.shoes = [...originalAssets.shoes];
+      
+      current.shirts = 0;
+      current.pants = 0;
+      current.shoes = 0;
+    }
+    
+    // Filter assets based on selected filters
+    function applyFilters() {
+      restoreOriginalAssets();
+      
+      // Filter shirts based on tops selection
+      if (selectedFilters.tops.length > 0) {
+        assets.shirts = originalAssets.shirts.filter(url => {
+          const filename = url.split('/').pop().toLowerCase();
+          return selectedFilters.tops.some(filter => filename.includes(filter));
+        });
+      } else {
+        // If no filters selected for tops, show no items
+        assets.shirts = [];
+      }
+      
+      // Filter pants based on bottoms selection (including shorts)
+      if (selectedFilters.bottoms.length > 0) {
+        // Get all bottoms items (pants + shorts from manifest)
+        const allBottoms = [...originalAssets.pants];
+        if (manifest.shorts) {
+          manifest.shorts.forEach(file => {
+            allBottoms.push(u(`shorts/${file}`));
+          });
+        }
+        
+        assets.pants = allBottoms.filter(url => {
+          const filename = url.split('/').pop().toLowerCase();
+          return selectedFilters.bottoms.some(filter => {
+            if (filter === 'pants') {
+              // Match pants but not shorts, skirts, jeans, leggings
+              return filename.includes('pant') && 
+                     !filename.includes('short') && 
+                     !filename.includes('skirt') && 
+                     !filename.includes('jean') && 
+                     !filename.includes('legging');
+            }
+            if (filter === 'shorts') {
+              return filename.includes('short');
+            }
+            if (filter === 'skirts') {
+              return filename.includes('skirt');
+            }
+            if (filter === 'jeans') {
+              return filename.includes('jean');
+            }
+            if (filter === 'leggings') {
+              return filename.includes('legging');
+            }
+            return filename.includes(filter);
+          });
+        });
+      } else {
+        // If no filters selected for bottoms, show no items
+        assets.pants = [];
+      }
+      
+      // Filter shoes based on shoes selection
+      if (selectedFilters.shoes.length > 0) {
+        assets.shoes = originalAssets.shoes.filter(url => {
+          const filename = url.split('/').pop().toLowerCase();
+          return selectedFilters.shoes.some(filter => {
+            if (filter === 'basketball') return filename.includes('basketball');
+            if (filter === 'tennis') return filename.includes('tennis');
+            if (filter === 'dress') return filename.includes('dress');
+            if (filter === 'dunks') return filename.includes('dunk');
+            return false;
+          });
+        });
+      } else {
+        // If no filters selected for shoes, show no items
+        assets.shoes = [];
+      }
+      
+      // Reset current indices
+      current.shirts = 0;
+      current.pants = 0;
+      current.shoes = 0;
+      
+      // Hide groups for categories with no items (empty filters) and clear their slots
+      if (assets.shirts.length === 0) {
+        if (groups.shirts) groups.shirts.visible = false;
+        // Clear the carousel slots for shirts
+        carouselSlots.shirts.prev.clear();
+        carouselSlots.shirts.current.clear();
+        carouselSlots.shirts.next.clear();
+      } else {
+        if (groups.shirts) groups.shirts.visible = true;
+      }
+      
+      if (assets.pants.length === 0) {
+        if (groups.pants) groups.pants.visible = false;
+        // Clear the carousel slots for pants
+        carouselSlots.pants.prev.clear();
+        carouselSlots.pants.current.clear();
+        carouselSlots.pants.next.clear();
+      } else {
+        if (groups.pants) groups.pants.visible = true;
+      }
+      
+      if (assets.shoes.length === 0) {
+        if (groups.shoes) groups.shoes.visible = false;
+        // Clear the carousel slots for shoes
+        carouselSlots.shoes.prev.clear();
+        carouselSlots.shoes.current.clear();
+        carouselSlots.shoes.next.clear();
+      } else {
+        if (groups.shoes) groups.shoes.visible = true;
+      }
+    }
+    
+    // Store filter option click handlers to avoid duplicates
+    let filterOptionHandlers = new Map();
+    
+    // Initialize filter UI
+    function initializeFilterUI(resetFilters = false) {
+      const filterOverlay = document.getElementById('filter-overlay');
+      const filterOptions = document.querySelectorAll('.filter-option');
+      const applyButton = document.getElementById('apply-filters-button');
+      
+      // Only reset filter selections if explicitly requested (not when restoring)
+      if (resetFilters) {
+        selectedFilters = { tops: [], bottoms: [], shoes: [] };
+      }
+      
+      // Clear all selected states
+      filterOptions.forEach(option => {
+        option.classList.remove('selected');
+        // Remove old listener if it exists
+        if (filterOptionHandlers.has(option)) {
+          option.removeEventListener('click', filterOptionHandlers.get(option));
+        }
+      });
+      
+      // Add click handlers to filter options (only once)
+      filterOptions.forEach(option => {
+        const handler = () => {
+          const filterValue = option.dataset.filter;
+          const category = option.closest('.filter-category').querySelector('h3').textContent.toLowerCase();
+          
+          // Determine which filter array to use
+          let filterArray;
+          if (category === 'tops') {
+            filterArray = selectedFilters.tops;
+          } else if (category === 'bottoms') {
+            filterArray = selectedFilters.bottoms;
+          } else if (category === 'shoes') {
+            filterArray = selectedFilters.shoes;
+          } else {
+            return;
+          }
+          
+          // Toggle selection
+          if (option.classList.contains('selected')) {
+            option.classList.remove('selected');
+            const index = filterArray.indexOf(filterValue);
+            if (index > -1) filterArray.splice(index, 1);
+          } else {
+            option.classList.add('selected');
+            filterArray.push(filterValue);
+          }
+        };
+        
+        option.addEventListener('click', handler);
+        filterOptionHandlers.set(option, handler);
+      });
+      
+      // Remove old apply button listener if it exists
+      if (applyButton && applyButton._applyHandler) {
+        applyButton.removeEventListener('click', applyButton._applyHandler);
+      }
+      
+      // Apply filters button handler
+      const applyHandler = () => {
+        // Store current filter selections before applying
+        lastAppliedFilters = {
+          tops: [...selectedFilters.tops],
+          bottoms: [...selectedFilters.bottoms],
+          shoes: [...selectedFilters.shoes]
+        };
+        
+        // Apply filters
+        applyFilters();
+        
+        // Hide filter overlay
+        filterOverlay.classList.remove('visible');
+        
+        // Navigate to clothing items view with animation
+        navigationState = 'clothing-items';
+        currentMode = 'casual';
+        isAnimating = false;
+        startAnimation();
+      };
+      
+      if (applyButton) {
+        applyButton._applyHandler = applyHandler;
+        applyButton.addEventListener('click', applyHandler);
+      }
+    }
+    
+    // Restore filter selections from last applied filters
+    function restoreFilterSelections() {
+      selectedFilters = {
+        tops: [...lastAppliedFilters.tops],
+        bottoms: [...lastAppliedFilters.bottoms],
+        shoes: [...lastAppliedFilters.shoes]
+      };
+      
+      // Update UI to show selected filters
+      document.querySelectorAll('.filter-option').forEach(option => {
+        option.classList.remove('selected');
+        const filterValue = option.dataset.filter;
+        const category = option.closest('.filter-category').querySelector('h3').textContent.toLowerCase();
+        
+        let filterArray;
+        if (category === 'tops') {
+          filterArray = selectedFilters.tops;
+        } else if (category === 'bottoms') {
+          filterArray = selectedFilters.bottoms;
+        } else if (category === 'shoes') {
+          filterArray = selectedFilters.shoes;
+        } else {
+          return;
+        }
+        
+        if (filterArray.includes(filterValue)) {
+          option.classList.add('selected');
+        }
+      });
+    }
+    
+    // Show filter overlay
+    function showFilterOverlay() {
+      const filterOverlay = document.getElementById('filter-overlay');
+      const welcomeOverlay = document.getElementById('welcome-overlay');
+      if (filterOverlay) {
+        // Hide welcome overlay if visible
+        if (welcomeOverlay) {
+          welcomeOverlay.style.display = 'none';
+          welcomeOverlay.classList.add('slide-out');
+        }
+        filterOverlay.classList.add('visible');
+        // Reset filters and initialize UI (fresh start from menu)
+        selectedFilters = { tops: [], bottoms: [], shoes: [] };
+        lastAppliedFilters = { tops: [], bottoms: [], shoes: [] };
+        initializeFilterUI(true);
+      }
+    }
+    
+    // Hide filter overlay
+    function hideFilterOverlay() {
+      const filterOverlay = document.getElementById('filter-overlay');
+      if (filterOverlay) {
+        filterOverlay.classList.remove('visible');
+      }
+    }
+    
+    // Free Browse button handler
+    freeBrowseButton.addEventListener("click", () => {
+      randomizeAssets();
+      navigationState = 'browse';
+      currentMode = 'casual';
+      startAnimation();
+    });
+    
+    // Specific button handler - show Style and Clothing Items buttons
+    specificButton.addEventListener("click", () => {
+      navigationState = 'specific-menu';
+      setupWelcomeButtons('specific-menu');
+      const backBtn = document.getElementById('back-button');
+      if (backBtn) backBtn.classList.add('visible');
+    });
+    
+    // Legacy go button handler (kept for compatibility - check if exists)
+    const legacyGoButton = document.getElementById("go-button");
+    if (legacyGoButton) {
+      legacyGoButton.addEventListener("click", startAnimation);
+    }
 
     // Initialize: load initial models
     // Verify we have assets before loading
