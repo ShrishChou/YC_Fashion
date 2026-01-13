@@ -2275,9 +2275,9 @@
       }
 
       // Apply z-offset for specific items if needed
-      // For dress at index 2, offset it backward (away from camera)
-      if (type === "dresses" && index === 2) {
-        object.position.z -= 0.3; // Move backward (positive Z is away from camera)
+      // For Off-Shoulder dress, offset it backward (away from camera)
+      if (type === "dresses" && (url.toLowerCase().includes('off_shoulder') || url.toLowerCase().includes('off-shoulder'))) {
+        object.position.z -= 0.2; // Move backward (positive Z is away from camera)
       }
 
       // Determine scale based on type
