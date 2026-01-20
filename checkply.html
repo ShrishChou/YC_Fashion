@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PLY (Gaussian Splat) Viewer</title>
+  <style>
+    html, body { height: 100%; margin: 0; background: #0b0d12; overflow: hidden; }
+    #ui {
+      position: fixed; top: 12px; left: 12px; z-index: 10;
+      padding: 10px 12px; border-radius: 12px;
+      background: rgba(20, 24, 34, 0.72); color: #e9eefc;
+      font: 14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      backdrop-filter: blur(10px);
+      max-width: 360px;
+    }
+    #file { display:block; margin-top: 8px; }
+    .hint { opacity: 0.8; font-size: 12px; margin-top: 6px; }
+    a { color: #b7c7ff; }
+  </style>
+</head>
+
+<body>
+  <div id="ui">
+    <div><strong>Gaussian Splat PLY Viewer</strong></div>
+    <div class="hint">
+      If you already have <code>object.ply</code> next to this HTML, it will auto-load.
+      Or pick a PLY file below.
+    </div>
+    <input id="file" type="file" accept=".ply" />
+    <div class="hint">
+      Tip: You must open this via a local server (not <code>file://</code>). Example:
+      <code>python3 -m http.server 8000</code>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as GaussianSplats3D from "https://esm.sh/@mkkellogg/gaussian-splats-3d@0.4.7";
+
+    // Create viewer (full-window)
+    const viewer = new GaussianSplats3D.Viewer({
+      rootElement: document.body,
+      useBuiltInControls: true,   // orbit/pan/zoom
+      cameraUp: [0, 1, 0],
+      // Optional quality knobs (uncomment if you want):
+      // antialias: true,
+      // pixelRatio: Math.min(window.devicePixelRatio, 2),
+    });
+
+    // Helper: load from URL or blob
+    async function loadFromUrl(url) {
+      // Clear existing scenes if any
+      viewer.clearSplatScenes?.();
+
+      await viewer.addSplatScene(url, {
+        // Useful toggles if you see artifacts:
+        // progressiveLoad: true,
+        // splatAlphaRemovalThreshold: 0.0,
+      });
+
+      viewer.start();
+    }
+
+    async function loadFromFile(file) {
+      const blobUrl = URL.createObjectURL(file);
+      try {
+        await loadFromUrl(blobUrl);
+      } finally {
+        // Keep URL alive while viewer uses it; revoke on next load
+        // (revoking immediately can break streaming in some browsers)
+      }
+    }
+
+    // Auto-load object.ply if present next to this HTML
+    // (works only when served by a local server)
+    loadFromUrl("./object.ply").catch(() => {
+      // Ignore if not found; user can upload manually
+    });
+
+    // File picker
+    document.getElementById("file").addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (file) await loadFromFile(file);
+    });
+  </script>
+</body>
+</html>
